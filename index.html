@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commission Dashboard | Middle Sis Inc.</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    
+    <style>
+        :root {
+            --color-forest: #0F3D3E;
+            --color-teal: #12403D;
+            --color-mint: #00A896;
+            --color-coral: #FF6B6B;
+            --color-gold: #FFD166;
+            --color-cream: #F8F4E8;
+            --color-sand: #E9DCC9;
+            --color-charcoal: #2C3333;
+            --color-slate: #5C6B73;
+            --font-display: 'Work Sans', system-ui, sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-display);
+            background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-sand) 100%);
+            color: var(--color-charcoal);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 40px 32px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header-title {
+            font-size: 56px;
+            font-weight: 800;
+            color: var(--color-forest);
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+
+        .header-subtitle {
+            font-size: 18px;
+            color: var(--color-slate);
+            font-weight: 500;
+        }
+
+        .upload-zone {
+            background: white;
+            border: 3px dashed var(--color-mint);
+            border-radius: 16px;
+            padding: 64px 32px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-zone::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,168,150,0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .upload-zone:hover::before {
+            left: 100%;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--color-forest);
+            background: rgba(0,168,150,0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(15,61,62,0.1);
+        }
+
+        .upload-zone.dragover {
+            background: rgba(0,168,150,0.1);
+            border-color: var(--color-forest);
+        }
+
+        .upload-icon {
+            font-size: 72px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .upload-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-forest);
+            margin-bottom: 8px;
+        }
+
+        .upload-subtitle {
+            font-size: 16px;
+            color: var(--color-slate);
+            margin-bottom: 24px;
+        }
+
+        .upload-formats {
+            font-size: 13px;
+            color: var(--color-slate);
+            font-family: var(--font-mono);
+            background: var(--color-cream);
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 6px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-info {
+            background: white;
+            border-left: 4px solid var(--color-mint);
+            padding: 20px 24px;
+            border-radius: 8px;
+            margin-bottom: 32px;
+            display: none;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .file-info-icon {
+            font-size: 32px;
+        }
+
+        .file-info-details {
+            flex: 1;
+        }
+
+        .file-info-name {
+            font-weight: 700;
+            color: var(--color-forest);
+            font-size: 16px;
+        }
+
+        .file-info-meta {
+            font-size: 14px;
+            color: var(--color-slate);
+            font-family: var(--font-mono);
+        }
+
+        .btn-clear {
+            background: var(--color-coral);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-clear:hover {
+            background: #ff5252;
+            transform: scale(1.05);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+            animation: fadeIn 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stat-card {
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-left: 5px solid var(--stat-color, var(--color-mint));
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .stat-card.revenue { --stat-color: var(--color-mint); }
+        .stat-card.profit { --stat-color: var(--color-forest); }
+        .stat-card.commission { --stat-color: var(--color-gold); }
+        .stat-card.margin { --stat-color: var(--color-coral); }
+
+        .stat-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-slate);
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 40px;
+            font-weight: 800;
+            color: var(--color-forest);
+            font-family: var(--font-mono);
+            letter-spacing: -1px;
+        }
+
+        .stat-sub {
+            font-size: 14px;
+            color: var(--color-slate);
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        .controls {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 32px;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: end;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 200px;
+        }
+
+        .control-label {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-slate);
+        }
+
+        .control-input {
+            padding: 12px 16px;
+            border: 2px solid var(--color-sand);
+            border-radius: 8px;
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .control-input:focus {
+            outline: none;
+            border-color: var(--color-mint);
+            box-shadow: 0 0 0 3px rgba(0,168,150,0.1);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-export {
+            background: var(--color-mint);
+            color: white;
+        }
+
+        .btn-export:hover {
+            background: var(--color-forest);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,168,150,0.3);
+        }
+
+        .btn-print {
+            background: var(--color-forest);
+            color: white;
+        }
+
+        .btn-print:hover {
+            background: var(--color-teal);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(15,61,62,0.3);
+        }
+
+        .rep-summary {
+            background: white;
+            padding: 32px;
+            border-radius: 12px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: none;
+        }
+
+        .rep-summary-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--color-forest);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .rep-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 20px;
+        }
+
+        .rep-card {
+            background: linear-gradient(135deg, var(--color-cream) 0%, white 100%);
+            border: 2px solid var(--color-sand);
+            border-radius: 10px;
+            padding: 24px;
+            transition: all 0.3s;
+        }
+
+        .rep-card:hover {
+            border-color: var(--color-mint);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .rep-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--color-forest);
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid var(--color-mint);
+        }
+
+        .rep-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .rep-stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rep-stat-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--color-slate);
+            letter-spacing: 0.5px;
+        }
+
+        .rep-stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: var(--color-forest);
+        }
+
+        .rep-stat-value.highlight {
+            font-size: 26px;
+            color: var(--color-mint);
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            overflow: hidden;
+            display: none;
+        }
+
+        .table-header {
+            background: var(--color-forest);
+            color: white;
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .table-count {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 12px;
+            border-radius: 6px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: 600px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--color-cream);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th {
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-forest);
+            border-bottom: 3px solid var(--color-mint);
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        th:hover {
+            background: var(--color-sand);
+        }
+
+        th.sortable::after {
+            content: '⇅';
+            margin-left: 8px;
+            opacity: 0.3;
+            font-size: 14px;
+        }
+
+        th.sort-asc::after {
+            content: '↑';
+            opacity: 1;
+            color: var(--color-mint);
+        }
+
+        th.sort-desc::after {
+            content: '↓';
+            opacity: 1;
+            color: var(--color-mint);
+        }
+
+        td {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--color-cream);
+            font-size: 14px;
+        }
+
+        tbody tr {
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: var(--color-cream);
+        }
+
+        .td-number {
+            text-align: right;
+            font-family: var(--font-mono);
+            font-weight: 600;
+        }
+
+        .td-profit-positive {
+            color: var(--color-forest);
+        }
+
+        .td-profit-negative {
+            color: var(--color-coral);
+        }
+
+        .td-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-sales {
+            background: var(--color-mint);
+            color: white;
+        }
+
+        .badge-operations {
+            background: var(--color-slate);
+            color: white;
+        }
+
+        .badge-pending {
+            background: var(--color-gold);
+            color: var(--color-charcoal);
+        }
+
+        .badge-paid {
+            background: var(--color-forest);
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 32px;
+            color: var(--color-slate);
+        }
+
+        .empty-icon {
+            font-size: 80px;
+            margin-bottom: 16px;
+            opacity: 0.4;
+        }
+
+        .empty-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-forest);
+            margin-bottom: 8px;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .upload-zone, .file-info, .controls, .btn {
+                display: none !important;
+            }
+            .container {
+                max-width: 100%;
+                padding: 20px;
+            }
+            .rep-card, .table-container {
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 36px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .controls {
+                flex-direction: column;
+            }
+            .control-group {
+                width: 100%;
+            }
+            .rep-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="header-title">📊 Commission Dashboard</h1>
+            <p class="header-subtitle">Middle Sis Inc. | 303 Merrick Road, Lynbrook, NY</p>
+        </div>
+
+        <div class="upload-zone" id="uploadZone">
+            <span class="upload-icon">📤</span>
+            <h2 class="upload-title">Drop Your Commission Report Here</h2>
+            <p class="upload-subtitle">Or click to browse files</p>
+            <div class="upload-formats">Supports: .xlsx .csv .xls</div>
+            <input type="file" id="fileInput" accept=".xlsx,.xls,.csv">
+        </div>
+
+        <div class="file-info" id="fileInfo">
+            <span class="file-info-icon">📄</span>
+            <div class="file-info-details">
+                <div class="file-info-name" id="fileName"></div>
+                <div class="file-info-meta" id="fileMeta"></div>
+            </div>
+            <button class="btn-clear" onclick="clearFile()">Clear</button>
+        </div>
+
+        <div class="stats-grid" id="statsGrid" style="display: none;">
+            <div class="stat-card revenue">
+                <div class="stat-label">Total Revenue</div>
+                <div class="stat-value" id="statRevenue">$0</div>
+                <div class="stat-sub" id="statCount">0 shipments</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Cost</div>
+                <div class="stat-value" id="statCost">$0</div>
+                <div class="stat-sub">Carrier charges</div>
+            </div>
+            <div class="stat-card profit">
+                <div class="stat-label">Total Profit</div>
+                <div class="stat-value" id="statProfit">$0</div>
+                <div class="stat-sub" id="statMargin">0% margin</div>
+            </div>
+            <div class="stat-card commission">
+                <div class="stat-label">Total Commission</div>
+                <div class="stat-value" id="statCommission">$0</div>
+                <div class="stat-sub">Owed to agents</div>
+            </div>
+        </div>
+
+        <div class="controls" id="controls" style="display: none;">
+            <div class="control-group">
+                <label class="control-label">Filter by Agent</label>
+                <select id="agentFilter" class="control-input">
+                    <option value="">All Agents</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Agent Type</label>
+                <select id="typeFilter" class="control-input">
+                    <option value="">All Types</option>
+                    <option value="Sales">Sales</option>
+                    <option value="Operations">Operations</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Status</label>
+                <select id="statusFilter" class="control-input">
+                    <option value="">All Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Paid">Paid</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label class="control-label">&nbsp;</label>
+                <button class="btn btn-export" onclick="exportCSV()">📥 Export CSV</button>
+            </div>
+            <div class="control-group">
+                <label class="control-label">&nbsp;</label>
+                <button class="btn btn-print" onclick="window.print()">🖨️ Print Report</button>
+            </div>
+        </div>
+
+        <div class="rep-summary" id="repSummary">
+            <h2 class="rep-summary-title">
+                <span>👥</span>
+                Performance by Agent (Operations Report)
+            </h2>
+            <div class="rep-grid" id="repGrid"></div>
+        </div>
+
+        <div class="table-container" id="tableContainer">
+            <div class="table-header">
+                <div class="table-title">Commission Details</div>
+                <div class="table-count" id="tableCount">0 records</div>
+            </div>
+            <div class="table-wrapper" id="tableWrapper">
+                <div class="empty-state">
+                    <div class="empty-icon">📋</div>
+                    <div class="empty-title">No Data Loaded</div>
+                    <p>Upload a commission report from Logistically to get started</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let rawData = [];
+        let processedData = [];
+        let sortColumn = null;
+        let sortAsc = true;
+
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+
+        uploadZone.addEventListener('click', () => fileInput.click());
+        
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragover');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file) handleFile(file);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) handleFile(file);
+        });
+
+        function handleFile(file) {
+            const reader = new FileReader();
+            
+            reader.onload = (e) => {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    rawData = XLSX.utils.sheet_to_json(firstSheet);
+                    
+                    document.getElementById('fileName').textContent = file.name;
+                    document.getElementById('fileMeta').textContent = 
+                        `${rawData.length} records • ${(file.size / 1024).toFixed(1)} KB`;
+                    document.getElementById('fileInfo').style.display = 'flex';
+                    
+                    processData();
+                    displayAll();
+                    
+                } catch (error) {
+                    alert('Error reading file: ' + error.message);
+                }
+            };
+            
+            reader.readAsArrayBuffer(file);
+        }
+
+        function processData() {
+            processedData = rawData
+                .filter(row => {
+                    const orderNum = String(row['Order Number'] || '');
+                    return orderNum && 
+                           orderNum !== 'GRAND TOTAL' && 
+                           !orderNum.includes('Count') &&
+                           orderNum.length > 5;
+                })
+                .map(row => {
+                    const revenue = parseFloat(row['Customer Total Cost from Order'] || 0);
+                    const cost = parseFloat(row['Carrier Cost from Order'] || 0);
+                    const profit = parseFloat(row['Gross Profit'] || (revenue - cost));
+                    const margin = revenue > 0 ? (profit / revenue) * 100 : 0;
+                    const commission = parseFloat(row['Sales Commission'] || 0);
+                    
+                    return {
+                        date: row['Shipment Date'] || '',
+                        createDate: row['Commission Create Date'] || '',
+                        refNumber: row['Order Number'] || '',
+                        commissionId: row['Commission Record ID'] || '',
+                        customer: row['Customer Name'] || '',
+                        carrier: row['Carrier Name'] || '',
+                        salesRep: row['Agent Full Name'] || '',
+                        agentType: row['Agent Type'] || 'Sales',
+                        status: row['Commission Status'] || 'Unknown',
+                        revenue,
+                        cost,
+                        profit,
+                        margin,
+                        commission,
+                        salesTax: parseFloat(row['Sales Tax'] || 0),
+                        salesTax2: parseFloat(row['Sales Tax 2'] || 0)
+                    };
+                });
+        }
+
+        function displayAll() {
+            updateStats();
+            updateRepSummary();
+            renderTable(processedData);
+            populateFilters();
+            
+            document.getElementById('statsGrid').style.display = 'grid';
+            document.getElementById('controls').style.display = 'flex';
+            document.getElementById('repSummary').style.display = 'block';
+            document.getElementById('tableContainer').style.display = 'block';
+        }
+
+        function updateStats() {
+            const totalRevenue = processedData.reduce((sum, row) => sum + row.revenue, 0);
+            const totalCost = processedData.reduce((sum, row) => sum + row.cost, 0);
+            const totalProfit = processedData.reduce((sum, row) => sum + row.profit, 0);
+            const totalCommission = processedData.reduce((sum, row) => sum + row.commission, 0);
+            const avgMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
+
+            document.getElementById('statRevenue').textContent = formatMoney(totalRevenue);
+            document.getElementById('statCost').textContent = formatMoney(totalCost);
+            document.getElementById('statProfit').textContent = formatMoney(totalProfit);
+            document.getElementById('statCommission').textContent = formatMoney(totalCommission);
+            document.getElementById('statMargin').textContent = avgMargin.toFixed(1) + '% margin';
+            document.getElementById('statCount').textContent = processedData.length + ' shipments';
+        }
+
+        function updateRepSummary() {
+            const byRep = {};
+            
+            processedData.forEach(row => {
+                const rep = row.salesRep;
+                if (!byRep[rep]) {
+                    byRep[rep] = {
+                        count: 0,
+                        revenue: 0,
+                        cost: 0,
+                        profit: 0,
+                        commission: 0
+                    };
+                }
+                byRep[rep].count++;
+                byRep[rep].revenue += row.revenue;
+                byRep[rep].cost += row.cost;
+                byRep[rep].profit += row.profit;
+                byRep[rep].commission += row.commission;
+            });
+
+            const html = Object.entries(byRep)
+                .sort((a, b) => b[1].commission - a[1].commission)
+                .map(([rep, data]) => {
+                    const margin = data.revenue > 0 ? (data.profit / data.revenue) * 100 : 0;
+                    const avgCommPerShipment = data.count > 0 ? data.commission / data.count : 0;
+                    return `
+                        <div class="rep-card">
+                            <div class="rep-name">${rep}</div>
+                            <div class="rep-stats">
+                                <div class="rep-stat-item">
+                                    <span class="rep-stat-label">Shipments</span>
+                                    <span class="rep-stat-value">${data.count}</span>
+                                </div>
+                                <div class="rep-stat-item">
+                                    <span class="rep-stat-label">Revenue</span>
+                                    <span class="rep-stat-value">${formatMoney(data.revenue)}</span>
+                                </div>
+                                <div class="rep-stat-item">
+                                    <span class="rep-stat-label">Cost</span>
+                                    <span class="rep-stat-value">${formatMoney(data.cost)}</span>
+                                </div>
+                                <div class="rep-stat-item">
+                                    <span class="rep-stat-label">Profit</span>
+                                    <span class="rep-stat-value">${formatMoney(data.profit)}</span>
+                                </div>
+                                <div class="rep-stat-item">
+                                    <span class="rep-stat-label">Avg Margin</span>
+                                    <span class="rep-stat-value">${margin.toFixed(1)}%</span>
+                                </div>
+                                <div class="rep-stat-item">
+                                    <span class="rep-stat-label">Avg Comm/Ship</span>
+                                    <span class="rep-stat-value">${formatMoney(avgCommPerShipment)}</span>
+                                </div>
+                                <div class="rep-stat-item" style="grid-column: span 2;">
+                                    <span class="rep-stat-label">Total Commission</span>
+                                    <span class="rep-stat-value highlight">${formatMoney(data.commission)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            document.getElementById('repGrid').innerHTML = html;
+        }
+
+        function renderTable(data) {
+            const html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="sortable" onclick="sort('date')">Date</th>
+                            <th class="sortable" onclick="sort('refNumber')">Order #</th>
+                            <th class="sortable" onclick="sort('customer')">Customer</th>
+                            <th class="sortable" onclick="sort('carrier')">Carrier</th>
+                            <th class="sortable" onclick="sort('salesRep')">Agent</th>
+                            <th class="sortable" onclick="sort('agentType')">Type</th>
+                            <th class="sortable" onclick="sort('status')">Status</th>
+                            <th class="sortable" onclick="sort('revenue')">Revenue</th>
+                            <th class="sortable" onclick="sort('cost')">Cost</th>
+                            <th class="sortable" onclick="sort('profit')">Profit</th>
+                            <th class="sortable" onclick="sort('margin')">Margin</th>
+                            <th class="sortable" onclick="sort('commission')">Commission</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.map(row => `
+                            <tr>
+                                <td>${formatDate(row.date)}</td>
+                                <td style="font-family: var(--font-mono); font-weight: 600;">${row.refNumber}</td>
+                                <td>${row.customer}</td>
+                                <td>${row.carrier}</td>
+                                <td><strong>${row.salesRep}</strong></td>
+                                <td><span class="td-badge badge-${row.agentType.toLowerCase()}">${row.agentType}</span></td>
+                                <td><span class="td-badge badge-${row.status.toLowerCase()}">${row.status}</span></td>
+                                <td class="td-number">${formatMoney(row.revenue)}</td>
+                                <td class="td-number">${formatMoney(row.cost)}</td>
+                                <td class="td-number ${row.profit >= 0 ? 'td-profit-positive' : 'td-profit-negative'}">
+                                    ${formatMoney(row.profit)}
+                                </td>
+                                <td class="td-number">${row.margin.toFixed(1)}%</td>
+                                <td class="td-number" style="font-weight: 700; color: var(--color-mint);">
+                                    ${formatMoney(row.commission)}
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            document.getElementById('tableWrapper').innerHTML = html;
+            document.getElementById('tableCount').textContent = data.length + ' records';
+        }
+
+        function populateFilters() {
+            const agents = [...new Set(processedData.map(r => r.salesRep))].sort();
+            const agentFilter = document.getElementById('agentFilter');
+            agentFilter.innerHTML = '<option value="">All Agents</option>' + 
+                agents.map(r => `<option value="${r}">${r}</option>`).join('');
+
+            ['agentFilter', 'typeFilter', 'statusFilter'].forEach(id => {
+                document.getElementById(id).addEventListener('change', applyFilters);
+            });
+        }
+
+        function applyFilters() {
+            const agentFilter = document.getElementById('agentFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            let filtered = processedData;
+
+            if (agentFilter) {
+                filtered = filtered.filter(r => r.salesRep === agentFilter);
+            }
+            if (typeFilter) {
+                filtered = filtered.filter(r => r.agentType === typeFilter);
+            }
+            if (statusFilter) {
+                filtered = filtered.filter(r => r.status === statusFilter);
+            }
+
+            renderTable(filtered);
+        }
+
+        function sort(column) {
+            if (sortColumn === column) {
+                sortAsc = !sortAsc;
+            } else {
+                sortColumn = column;
+                sortAsc = true;
+            }
+
+            processedData.sort((a, b) => {
+                let valA = a[column];
+                let valB = b[column];
+
+                if (typeof valA === 'number') {
+                    return sortAsc ? valA - valB : valB - valA;
+                }
+
+                valA = String(valA).toLowerCase();
+                valB = String(valB).toLowerCase();
+                
+                if (valA < valB) return sortAsc ? -1 : 1;
+                if (valA > valB) return sortAsc ? 1 : -1;
+                return 0;
+            });
+
+            applyFilters();
+
+            document.querySelectorAll('th').forEach(th => {
+                th.classList.remove('sort-asc', 'sort-desc');
+            });
+            event.target.classList.add(sortAsc ? 'sort-asc' : 'sort-desc');
+        }
+
+        function exportCSV() {
+            const csv = [
+                ['Date', 'Order#', 'Commission ID', 'Customer', 'Carrier', 'Agent', 'Type', 'Status', 
+                 'Revenue', 'Cost', 'Profit', 'Margin %', 'Commission'],
+                ...processedData.map(r => [
+                    formatDate(r.date),
+                    r.refNumber,
+                    r.commissionId,
+                    r.customer,
+                    r.carrier,
+                    r.salesRep,
+                    r.agentType,
+                    r.status,
+                    r.revenue.toFixed(2),
+                    r.cost.toFixed(2),
+                    r.profit.toFixed(2),
+                    r.margin.toFixed(2),
+                    r.commission.toFixed(2)
+                ])
+            ].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `middle-sis-commissions_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function clearFile() {
+            rawData = [];
+            processedData = [];
+            fileInput.value = '';
+            document.getElementById('fileInfo').style.display = 'none';
+            document.getElementById('statsGrid').style.display = 'none';
+            document.getElementById('controls').style.display = 'none';
+            document.getElementById('repSummary').style.display = 'none';
+            document.getElementById('tableContainer').style.display = 'none';
+        }
+
+        function formatMoney(num) {
+            return '$' + Math.abs(num).toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const d = new Date(dateStr);
+            if (isNaN(d.getTime())) return dateStr;
+            return d.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+        }
+    </script>
+</body>
+</html>
