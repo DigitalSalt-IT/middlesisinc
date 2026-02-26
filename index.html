@@ -13,17 +13,17 @@
     
     <style>
         :root {
-            --color-primary: #6C9DB8;      /* Middle Sis blue */
-            --color-dark-blue: #4A7A94;    /* Darker blue */
-            --color-light-blue: #A8C5D8;   /* Light blue */
-            --color-accent: #6C9DB8;       /* Accent blue */
-            --color-orange: #FF8C42;       /* Warning/below goal */
-            --color-success: #4A7A94;      /* Success/meeting goal */
-            --color-grey-dark: #5A6C7D;    /* Dark grey */
-            --color-grey-med: #8BA3B5;     /* Medium grey */
-            --color-grey-light: #E8EEF2;   /* Light grey */
-            --color-white: #FFFFFF;        /* White */
-            --color-background: #F5F8FA;   /* Light background */
+            --color-primary-blue: #6BA3C8;
+            --color-dark-blue: #4A7B9D;
+            --color-light-blue: #A5C9DD;
+            --color-grey: #7D8A93;
+            --color-dark-grey: #4A5258;
+            --color-light-grey: #E8EAEC;
+            --color-white: #FFFFFF;
+            --color-cream: #F5F6F7;
+            --color-orange: #FF8C42;
+            --color-green: #5CB85C;
+            --color-red: #dc3545;
             --font-display: 'Work Sans', system-ui, sans-serif;
             --font-mono: 'Fira Code', monospace;
         }
@@ -36,8 +36,8 @@
 
         body {
             font-family: var(--font-display);
-            background: linear-gradient(135deg, var(--color-background) 0%, var(--color-grey-light) 100%);
-            color: var(--color-grey-dark);
+            background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-light-grey) 100%);
+            color: var(--color-dark-grey);
             min-height: 100vh;
             line-height: 1.6;
         }
@@ -52,10 +52,6 @@
             text-align: center;
             margin-bottom: 48px;
             animation: slideDown 0.6s ease-out;
-            background: var(--color-white);
-            padding: 32px;
-            border-radius: 16px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
         }
 
         @keyframes slideDown {
@@ -63,146 +59,50 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .header-logo {
-            max-width: 400px;
-            height: auto;
-            margin: 0 auto 16px;
-            display: block;
-        }
-
-        .header-title {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--color-primary);
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
+        .header img {
+            max-height: 80px;
+            margin-bottom: 16px;
         }
 
         .header-subtitle {
-            font-size: 16px;
-            color: var(--color-grey-med);
+            font-size: 18px;
+            color: var(--color-grey);
             font-weight: 500;
         }
 
         .upload-zone {
-            background: var(--color-white);
-            border: 3px dashed var(--color-primary);
+            background: white;
+            border: 3px dashed var(--color-primary-blue);
             border-radius: 16px;
-            padding: 64px 32px;
+            padding: 80px 40px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 40px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .upload-zone::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(108,157,184,0.1), transparent);
-            transition: left 0.6s ease;
-        }
-
-        .upload-zone:hover::before {
-            left: 100%;
+            transition: all 0.3s;
+            margin-bottom: 32px;
         }
 
         .upload-zone:hover {
             border-color: var(--color-dark-blue);
-            background: rgba(108,157,184,0.05);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(108,157,184,0.15);
-        }
-
-        .upload-zone.dragover {
-            background: rgba(108,157,184,0.1);
-            border-color: var(--color-dark-blue);
+            background: var(--color-cream);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
         }
 
         .upload-icon {
-            font-size: 72px;
-            margin-bottom: 16px;
-            display: block;
-        }
-
-        .upload-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--color-dark-blue);
-            margin-bottom: 8px;
-        }
-
-        .upload-subtitle {
-            font-size: 16px;
-            color: var(--color-grey-med);
+            font-size: 64px;
             margin-bottom: 24px;
         }
 
-        .upload-formats {
-            font-size: 13px;
-            color: var(--color-grey-med);
-            font-family: var(--font-mono);
-            background: var(--color-grey-light);
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 6px;
-        }
-
-        #fileInput {
-            display: none;
-        }
-
-        .file-info {
-            background: white;
-            border-left: 4px solid var(--color-primary-blue);
-            padding: 20px 24px;
-            border-radius: 8px;
-            margin-bottom: 32px;
-            display: none;
-            align-items: center;
-            gap: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .file-info-icon {
-            font-size: 32px;
-        }
-
-        .file-info-details {
-            flex: 1;
-        }
-
-        .file-info-name {
+        .upload-text {
+            font-size: 24px;
             font-weight: 700;
             color: var(--color-dark-blue);
+            margin-bottom: 12px;
+        }
+
+        .upload-hint {
+            color: var(--color-grey);
             font-size: 16px;
-        }
-
-        .file-info-meta {
-            font-size: 14px;
-            color: var(--color-grey-dark);
-            font-family: var(--font-mono);
-        }
-
-        .btn-clear {
-            background: var(--color-coral);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-clear:hover {
-            background: #ff5252;
-            transform: scale(1.05);
         }
 
         .stats-grid {
@@ -234,15 +134,15 @@
 
         .stat-card.revenue { --stat-color: var(--color-primary-blue); }
         .stat-card.profit { --stat-color: var(--color-dark-blue); }
-        .stat-card.commission { --stat-color: var(--color-gold); }
-        .stat-card.margin { --stat-color: var(--color-coral); }
+        .stat-card.commission { --stat-color: var(--color-orange); }
+        .stat-card.margin { --stat-color: var(--color-green); }
 
         .stat-label {
             font-size: 12px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: var(--color-grey-dark);
+            color: var(--color-grey);
             margin-bottom: 8px;
         }
 
@@ -256,7 +156,7 @@
 
         .stat-sub {
             font-size: 14px;
-            color: var(--color-grey-dark);
+            color: var(--color-grey);
             margin-top: 8px;
             font-weight: 500;
         }
@@ -285,12 +185,12 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: var(--color-grey-dark);
+            color: var(--color-grey);
         }
 
         .control-input {
             padding: 12px 16px;
-            border: 2px solid var(--color-grey-light);
+            border: 2px solid var(--color-light-grey);
             border-radius: 8px;
             font-family: var(--font-display);
             font-size: 15px;
@@ -301,7 +201,7 @@
         .control-input:focus {
             outline: none;
             border-color: var(--color-primary-blue);
-            box-shadow: 0 0 0 3px rgba(0,168,150,0.1);
+            box-shadow: 0 0 0 3px rgba(107,163,200,0.1);
         }
 
         .btn {
@@ -318,25 +218,34 @@
         }
 
         .btn-export {
-            background: var(--color-primary-blue);
+            background: var(--color-dark-blue);
             color: white;
         }
 
         .btn-export:hover {
-            background: var(--color-dark-blue);
+            background: var(--color-primary-blue);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,168,150,0.3);
+            box-shadow: 0 4px 12px rgba(107,163,200,0.3);
         }
 
         .btn-print {
-            background: var(--color-dark-blue);
+            background: var(--color-primary-blue);
             color: white;
         }
 
         .btn-print:hover {
             background: var(--color-dark-blue);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(15,61,62,0.3);
+        }
+
+        .btn-clear {
+            background: var(--color-red);
+            color: white;
+        }
+
+        .btn-clear:hover {
+            background: #c82333;
+            transform: translateY(-2px);
         }
 
         .rep-summary {
@@ -345,7 +254,6 @@
             border-radius: 12px;
             margin-bottom: 32px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            display: none;
         }
 
         .rep-summary-title {
@@ -365,11 +273,12 @@
         }
 
         .rep-card {
-            background: linear-gradient(135deg, var(--color-background) 0%, white 100%);
-            border: 2px solid var(--color-grey-light);
+            background: linear-gradient(135deg, var(--color-cream) 0%, white 100%);
+            border: 2px solid var(--color-light-grey);
             border-radius: 10px;
             padding: 24px;
             transition: all 0.3s;
+            cursor: pointer;
         }
 
         .rep-card:hover {
@@ -398,11 +307,15 @@
             flex-direction: column;
         }
 
+        .rep-stat-item.full-width {
+            grid-column: span 2;
+        }
+
         .rep-stat-label {
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
-            color: var(--color-grey-dark);
+            color: var(--color-grey);
             letter-spacing: 0.5px;
         }
 
@@ -423,7 +336,6 @@
             border-radius: 12px;
             box-shadow: 0 4px 16px rgba(0,0,0,0.08);
             overflow: hidden;
-            display: none;
         }
 
         .table-header {
@@ -459,7 +371,7 @@
         }
 
         thead {
-            background: var(--color-background);
+            background: var(--color-cream);
             position: sticky;
             top: 0;
             z-index: 10;
@@ -481,7 +393,7 @@
         }
 
         th:hover {
-            background: var(--color-grey-light);
+            background: var(--color-light-grey);
         }
 
         th.sortable::after {
@@ -505,7 +417,7 @@
 
         td {
             padding: 18px 20px;
-            border-bottom: 1px solid var(--color-background);
+            border-bottom: 1px solid var(--color-cream);
             font-size: 14px;
         }
 
@@ -514,7 +426,7 @@
         }
 
         tbody tr:hover {
-            background: var(--color-background);
+            background: var(--color-cream);
         }
 
         .td-number {
@@ -524,11 +436,11 @@
         }
 
         .td-profit-positive {
-            color: var(--color-dark-blue);
+            color: var(--color-green);
         }
 
         .td-profit-negative {
-            color: var(--color-coral);
+            color: var(--color-orange);
         }
 
         .td-badge {
@@ -546,60 +458,175 @@
         }
 
         .badge-operations {
-            background: var(--color-grey-dark);
+            background: var(--color-grey);
             color: white;
         }
 
         .badge-pending {
-            background: var(--color-gold);
-            color: var(--color-grey-dark);
-        }
-
-        .badge-paid {
-            background: var(--color-dark-blue);
+            background: var(--color-orange);
             color: white;
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 80px 32px;
-            color: var(--color-grey-dark);
+        .badge-paid {
+            background: var(--color-green);
+            color: white;
         }
 
-        .empty-icon {
-            font-size: 80px;
-            margin-bottom: 16px;
-            opacity: 0.4;
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            animation: fadeIn 0.3s;
         }
 
-        .empty-title {
-            font-size: 24px;
+        .modal-content {
+            background-color: white;
+            margin: 2% auto;
+            padding: 0;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            background: var(--color-dark-blue);
+            color: white;
+            padding: 32px;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .close {
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+            transition: all 0.2s;
+        }
+
+        .close:hover {
+            color: var(--color-orange);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 32px;
+        }
+
+        .perf-section {
+            margin-bottom: 32px;
+            padding-bottom: 32px;
+            border-bottom: 2px solid var(--color-light-grey);
+        }
+
+        .perf-section:last-child {
+            border-bottom: none;
+        }
+
+        .perf-section-title {
+            font-size: 20px;
             font-weight: 700;
             color: var(--color-dark-blue);
-            margin-bottom: 8px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .perf-highlight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .perf-highlight {
+            background: var(--color-cream);
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid var(--color-primary-blue);
+        }
+
+        .perf-highlight-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--color-grey);
+            margin-bottom: 4px;
+        }
+
+        .perf-highlight-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--color-dark-blue);
+            font-family: var(--font-mono);
+        }
+
+        .month-breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        .month-breakdown-table th,
+        .month-breakdown-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--color-light-grey);
+        }
+
+        .month-breakdown-table th {
+            background: var(--color-cream);
+            font-weight: 700;
+            color: var(--color-dark-blue);
+        }
+
+        .month-breakdown-table tr:hover {
+            background: var(--color-cream);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px 20px;
+            color: var(--color-grey);
+            font-size: 13px;
+            font-family: var(--font-mono);
         }
 
         @media print {
             body {
                 background: white;
             }
-            .upload-zone, .file-info, .controls, .btn {
+            .controls, .btn, .modal {
                 display: none !important;
-            }
-            .container {
-                max-width: 100%;
-                padding: 20px;
-            }
-            .rep-card, .table-container {
-                box-shadow: none;
-                page-break-inside: avoid;
             }
         }
 
         @media (max-width: 768px) {
-            .header-title {
-                font-size: 36px;
-            }
             .stats-grid {
                 grid-template-columns: 1fr;
             }
@@ -618,25 +645,28 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="data:image/png;base64,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...truncated..." alt="Middle Sis Inc." style="height: 80px; margin-bottom: 16px;">
+            <svg width="300" height="80" viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="truckGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#6BA3C8;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#4A7B9D;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <text x="150" y="25" font-family="Work Sans, sans-serif" font-size="24" font-weight="700" fill="#4A7B9D" text-anchor="middle" font-style="italic">Middle Sis Inc.</text>
+                <rect x="80" y="40" width="40" height="25" fill="url(#truckGradient)" rx="2"/>
+                <rect x="120" y="45" width="50" height="20" fill="#A5C9DD" rx="2"/>
+                <circle cx="95" cy="67" r="5" fill="#4A7B9D"/>
+                <circle cx="155" cy="67" r="5" fill="#4A7B9D"/>
+                <path d="M 120 45 L 170 45 L 170 65 L 120 65 Z" fill="none" stroke="#4A7B9D" stroke-width="2"/>
+            </svg>
             <p class="header-subtitle">303 Merrick Road, Lynbrook, NY | Commission Dashboard</p>
         </div>
 
-        <div class="upload-zone" id="uploadZone">
-            <span class="upload-icon">📤</span>
-            <h2 class="upload-title">Drop Your Commission Report Here</h2>
-            <p class="upload-subtitle">Or click to browse files</p>
-            <div class="upload-formats">Supports: .xlsx .csv .xls</div>
-            <input type="file" id="fileInput" accept=".xlsx,.xls,.csv">
-        </div>
-
-        <div class="file-info" id="fileInfo">
-            <span class="file-info-icon">📄</span>
-            <div class="file-info-details">
-                <div class="file-info-name" id="fileName"></div>
-                <div class="file-info-meta" id="fileMeta"></div>
-            </div>
-            <button class="btn-clear" onclick="clearFile()">Clear</button>
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon">📤</div>
+            <div class="upload-text">Drop Your Commission Excel File Here</div>
+            <div class="upload-hint">or click to browse • Supports .xlsx, .xls, .csv</div>
+            <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display: none;">
         </div>
 
         <div class="stats-grid" id="statsGrid" style="display: none;">
@@ -691,35 +721,46 @@
             </div>
             <div class="control-group">
                 <label class="control-label">&nbsp;</label>
-                <button class="btn btn-print" onclick="window.print()">🖨️ Print Report</button>
+                <button class="btn btn-print" onclick="window.print()">🖨️ Print</button>
+            </div>
+            <div class="control-group">
+                <label class="control-label">&nbsp;</label>
+                <button class="btn btn-clear" onclick="clearSavedData()">🗑️ Clear Data</button>
             </div>
         </div>
 
-        <div class="rep-summary" id="repSummary">
+        <div class="rep-summary" id="repSummary" style="display: none;">
             <h2 class="rep-summary-title">
                 <span>👥</span>
-                Performance by Agent (Operations Report)
+                Performance by Agent (Click for Details)
             </h2>
             <div class="rep-grid" id="repGrid"></div>
         </div>
 
-        <div class="table-container" id="tableContainer">
+        <div class="table-container" id="tableContainer" style="display: none;">
             <div class="table-header">
                 <div class="table-title">Commission Details</div>
                 <div class="table-count" id="tableCount">0 records</div>
             </div>
-            <div class="table-wrapper" id="tableWrapper">
-                <div class="empty-state">
-                    <div class="empty-icon">📋</div>
-                    <div class="empty-title">No Data Loaded</div>
-                    <p>Upload a commission report from Logistically to get started</p>
-                </div>
+            <div class="table-wrapper" id="tableWrapper"></div>
+        </div>
+    </div>
+
+    <!-- Performance Review Modal -->
+    <div id="perfModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalAgentName">Agent Performance Review</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content populated by JavaScript -->
             </div>
         </div>
     </div>
 
-    <footer style="text-align: center; padding: 40px 20px 20px; color: var(--color-grey-dark); font-size: 13px; font-family: var(--font-mono);">
-        Middle Sis Inc. Commission Dashboard v1.1.0 | Branded Edition | Feb 2026
+    <footer>
+        Middle Sis Inc. Commission Dashboard v1.2.0 | Complete Edition | Feb 2026
     </footer>
 
     <script>
@@ -728,52 +769,67 @@
         let sortColumn = null;
         let sortAsc = true;
         
-        const GOAL_MARGIN = 40;  // Target margin percentage
-
-        const uploadZone = document.getElementById('uploadZone');
-        const fileInput = document.getElementById('fileInput');
-
-        uploadZone.addEventListener('click', () => fileInput.click());
+        const GOAL_MARGIN = 40;
+        const STORAGE_KEY = 'middleSisCommissionData';
         
-        uploadZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadZone.classList.add('dragover');
+        // Load saved data on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSavedData();
+            setupFileInput();
+            setupDragDrop();
         });
-
-        uploadZone.addEventListener('dragleave', () => {
-            uploadZone.classList.remove('dragover');
-        });
-
-        uploadZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadZone.classList.remove('dragover');
-            const file = e.dataTransfer.files[0];
-            if (file) handleFile(file);
-        });
-
-        fileInput.addEventListener('change', (e) => {
+        
+        function setupFileInput() {
+            document.getElementById('fileInput').addEventListener('change', handleFile);
+        }
+        
+        function setupDragDrop() {
+            const zone = document.getElementById('uploadZone');
+            
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                zone.style.borderColor = 'var(--color-dark-blue)';
+                zone.style.background = 'var(--color-cream)';
+            });
+            
+            zone.addEventListener('dragleave', () => {
+                zone.style.borderColor = 'var(--color-primary-blue)';
+                zone.style.background = 'white';
+            });
+            
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                zone.style.borderColor = 'var(--color-primary-blue)';
+                zone.style.background = 'white';
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    processFile(files[0]);
+                }
+            });
+        }
+        
+        function handleFile(e) {
             const file = e.target.files[0];
-            if (file) handleFile(file);
-        });
-
-        function handleFile(file) {
+            if (file) {
+                processFile(file);
+            }
+        }
+        
+        function processFile(file) {
             const reader = new FileReader();
             
-            reader.onload = (e) => {
+            reader.onload = function(e) {
                 try {
                     const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, {type: 'array'});
+                    const workbook = XLSX.read(data, { type: 'array', cellDates: true });
                     const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                    rawData = XLSX.utils.sheet_to_json(firstSheet);
-                    
-                    document.getElementById('fileName').textContent = file.name;
-                    document.getElementById('fileMeta').textContent = 
-                        `${rawData.length} records • ${(file.size / 1024).toFixed(1)} KB`;
-                    document.getElementById('fileInfo').style.display = 'flex';
+                    rawData = XLSX.utils.sheet_to_json(firstSheet, { raw: false, dateNF: 'mm/dd/yyyy' });
                     
                     processData();
+                    saveData();
                     displayAll();
-                    
+                    document.getElementById('uploadZone').style.display = 'none';
                 } catch (error) {
                     alert('Error reading file: ' + error.message);
                 }
@@ -781,15 +837,15 @@
             
             reader.readAsArrayBuffer(file);
         }
-
+        
         function processData() {
             processedData = rawData
                 .filter(row => {
                     const orderNum = String(row['Order Number'] || '');
                     return orderNum && 
                            orderNum !== 'GRAND TOTAL' && 
-                           !orderNum.includes('Count') &&
-                           orderNum.length > 5;
+                           !orderNum.includes('Count') && 
+                           orderNum.length >= 5;
                 })
                 .map(row => {
                     const revenue = parseFloat(row['Customer Total Cost from Order'] || 0);
@@ -798,27 +854,81 @@
                     const margin = revenue > 0 ? (profit / revenue) * 100 : 0;
                     const commission = parseFloat(row['Sales Commission'] || 0);
                     
+                    // Parse date properly
+                    let shipDate = row['Shipment Date'] || '';
+                    if (shipDate) {
+                        // Try to parse as date
+                        const dateObj = new Date(shipDate);
+                        if (!isNaN(dateObj.getTime())) {
+                            shipDate = (dateObj.getMonth() + 1) + '/' + dateObj.getDate() + '/' + dateObj.getFullYear();
+                        }
+                    }
+                    
                     return {
-                        date: row['Shipment Date'] || '',
-                        createDate: row['Commission Create Date'] || '',
                         refNumber: row['Order Number'] || '',
                         commissionId: row['Commission Record ID'] || '',
+                        createDate: row['Commission Create Date'] || '',
+                        status: row['Commission Status'] || 'Unknown',
                         customer: row['Customer Name'] || '',
                         carrier: row['Carrier Name'] || '',
-                        salesRep: row['Agent Full Name'] || '',
-                        agentType: row['Agent Type'] || 'Sales',
-                        status: row['Commission Status'] || 'Unknown',
-                        revenue,
+                        date: shipDate,
                         cost,
-                        profit,
-                        margin,
-                        commission,
+                        revenue,
                         salesTax: parseFloat(row['Sales Tax'] || 0),
-                        salesTax2: parseFloat(row['Sales Tax 2'] || 0)
+                        salesTax2: parseFloat(row['Sales Tax 2'] || 0),
+                        agentType: row['Agent Type'] || 'Sales',
+                        salesRep: row['Agent Full Name'] || '',
+                        profit,
+                        commission,
+                        margin
                     };
                 });
         }
-
+        
+        function loadSavedData() {
+            try {
+                const savedData = localStorage.getItem(STORAGE_KEY);
+                if (savedData) {
+                    const parsed = JSON.parse(savedData);
+                    rawData = parsed.rawData || [];
+                    processedData = parsed.processedData || [];
+                    
+                    if (processedData.length > 0) {
+                        displayAll();
+                        document.getElementById('uploadZone').style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading saved data:', error);
+            }
+        }
+        
+        function saveData() {
+            try {
+                const dataToSave = {
+                    rawData: rawData,
+                    processedData: processedData,
+                    savedAt: new Date().toISOString()
+                };
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+            } catch (error) {
+                console.error('Error saving data:', error);
+            }
+        }
+        
+        function clearSavedData() {
+            if (confirm('Clear all saved data? This cannot be undone.')) {
+                localStorage.removeItem(STORAGE_KEY);
+                rawData = [];
+                processedData = [];
+                document.getElementById('uploadZone').style.display = 'block';
+                document.getElementById('statsGrid').style.display = 'none';
+                document.getElementById('controls').style.display = 'none';
+                document.getElementById('repSummary').style.display = 'none';
+                document.getElementById('tableContainer').style.display = 'none';
+            }
+        }
+        
         function displayAll() {
             updateStats();
             updateRepSummary();
@@ -830,7 +940,7 @@
             document.getElementById('repSummary').style.display = 'block';
             document.getElementById('tableContainer').style.display = 'block';
         }
-
+        
         function updateStats() {
             const totalRevenue = processedData.reduce((sum, row) => sum + row.revenue, 0);
             const totalCost = processedData.reduce((sum, row) => sum + row.cost, 0);
@@ -845,20 +955,14 @@
             document.getElementById('statMargin').textContent = avgMargin.toFixed(1) + '% margin';
             document.getElementById('statCount').textContent = processedData.length + ' shipments';
         }
-
+        
         function updateRepSummary() {
             const byRep = {};
             
             processedData.forEach(row => {
                 const rep = row.salesRep;
                 if (!byRep[rep]) {
-                    byRep[rep] = {
-                        count: 0,
-                        revenue: 0,
-                        cost: 0,
-                        profit: 0,
-                        commission: 0
-                    };
+                    byRep[rep] = { count: 0, revenue: 0, cost: 0, profit: 0, commission: 0 };
                 }
                 byRep[rep].count++;
                 byRep[rep].revenue += row.revenue;
@@ -874,10 +978,10 @@
                     const avgCommPerShipment = data.count > 0 ? data.commission / data.count : 0;
                     const marginVsGoal = margin - GOAL_MARGIN;
                     const marginStatus = margin >= GOAL_MARGIN ? '✅' : '⚠️';
-                    const marginColor = margin >= GOAL_MARGIN ? 'var(--color-primary-blue)' : 'var(--color-orange)';
+                    const marginColor = margin >= GOAL_MARGIN ? 'var(--color-green)' : 'var(--color-orange)';
                     
                     return `
-                        <div class="rep-card">
+                        <div class="rep-card" onclick="showPerformanceReview('${rep}')">
                             <div class="rep-name">${rep}</div>
                             <div class="rep-stats">
                                 <div class="rep-stat-item">
@@ -887,10 +991,6 @@
                                 <div class="rep-stat-item">
                                     <span class="rep-stat-label">Revenue</span>
                                     <span class="rep-stat-value">${formatMoney(data.revenue)}</span>
-                                </div>
-                                <div class="rep-stat-item">
-                                    <span class="rep-stat-label">Cost</span>
-                                    <span class="rep-stat-value">${formatMoney(data.cost)}</span>
                                 </div>
                                 <div class="rep-stat-item">
                                     <span class="rep-stat-label">Profit</span>
@@ -907,10 +1007,10 @@
                                     </span>
                                 </div>
                                 <div class="rep-stat-item">
-                                    <span class="rep-stat-label">Avg Comm/Ship</span>
+                                    <span class="rep-stat-label">Avg/Shipment</span>
                                     <span class="rep-stat-value">${formatMoney(avgCommPerShipment)}</span>
                                 </div>
-                                <div class="rep-stat-item" style="grid-column: span 2;">
+                                <div class="rep-stat-item full-width">
                                     <span class="rep-stat-label">Total Commission</span>
                                     <span class="rep-stat-value highlight">${formatMoney(data.commission)}</span>
                                 </div>
@@ -921,7 +1021,196 @@
 
             document.getElementById('repGrid').innerHTML = html;
         }
-
+        
+        function showPerformanceReview(agentName) {
+            const agentData = processedData.filter(r => r.salesRep === agentName);
+            
+            // Calculate totals
+            const totalShipments = agentData.length;
+            const totalRevenue = agentData.reduce((s, r) => s + r.revenue, 0);
+            const totalCost = agentData.reduce((s, r) => s + r.cost, 0);
+            const totalProfit = agentData.reduce((s, r) => s + r.profit, 0);
+            const totalCommission = agentData.reduce((s, r) => s + r.commission, 0);
+            const avgMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
+            const avgCommPerShip = totalShipments > 0 ? totalCommission / totalShipments : 0;
+            
+            // Group by month
+            const byMonth = {};
+            agentData.forEach(row => {
+                const dateObj = new Date(row.date);
+                const monthKey = dateObj.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                
+                if (!byMonth[monthKey]) {
+                    byMonth[monthKey] = { count: 0, revenue: 0, profit: 0, commission: 0 };
+                }
+                byMonth[monthKey].count++;
+                byMonth[monthKey].revenue += row.revenue;
+                byMonth[monthKey].profit += row.profit;
+                byMonth[monthKey].commission += row.commission;
+            });
+            
+            // Find best and worst shipments
+            const sorted = [...agentData].sort((a, b) => b.margin - a.margin);
+            const topShipments = sorted.slice(0, 5);
+            const worstShipments = sorted.slice(-5).reverse();
+            
+            // Build modal content
+            document.getElementById('modalAgentName').textContent = `${agentName} - Performance Review`;
+            document.getElementById('modalBody').innerHTML = `
+                <div class="perf-section">
+                    <div class="perf-section-title">📊 Overall Performance</div>
+                    <div class="perf-highlight-grid">
+                        <div class="perf-highlight">
+                            <div class="perf-highlight-label">Total Shipments</div>
+                            <div class="perf-highlight-value">${totalShipments}</div>
+                        </div>
+                        <div class="perf-highlight">
+                            <div class="perf-highlight-label">Total Revenue</div>
+                            <div class="perf-highlight-value">${formatMoney(totalRevenue)}</div>
+                        </div>
+                        <div class="perf-highlight">
+                            <div class="perf-highlight-label">Total Profit</div>
+                            <div class="perf-highlight-value">${formatMoney(totalProfit)}</div>
+                        </div>
+                        <div class="perf-highlight">
+                            <div class="perf-highlight-label">Avg Margin</div>
+                            <div class="perf-highlight-value" style="color: ${avgMargin >= GOAL_MARGIN ? 'var(--color-green)' : 'var(--color-orange)'}">
+                                ${avgMargin.toFixed(1)}%
+                            </div>
+                        </div>
+                        <div class="perf-highlight">
+                            <div class="perf-highlight-label">vs Goal (${GOAL_MARGIN}%)</div>
+                            <div class="perf-highlight-value" style="color: ${avgMargin >= GOAL_MARGIN ? 'var(--color-green)' : 'var(--color-orange)'}">
+                                ${avgMargin >= GOAL_MARGIN ? '+' : ''}${(avgMargin - GOAL_MARGIN).toFixed(1)}%
+                            </div>
+                        </div>
+                        <div class="perf-highlight">
+                            <div class="perf-highlight-label">Total Commission</div>
+                            <div class="perf-highlight-value">${formatMoney(totalCommission)}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="perf-section">
+                    <div class="perf-section-title">📅 Month-by-Month Breakdown</div>
+                    <table class="month-breakdown-table">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Shipments</th>
+                                <th>Revenue</th>
+                                <th>Profit</th>
+                                <th>Margin %</th>
+                                <th>Commission</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${Object.entries(byMonth)
+                                .sort((a, b) => new Date(b[0]) - new Date(a[0]))
+                                .map(([month, data]) => {
+                                    const monthMargin = data.revenue > 0 ? (data.profit / data.revenue) * 100 : 0;
+                                    return `
+                                        <tr>
+                                            <td><strong>${month}</strong></td>
+                                            <td>${data.count}</td>
+                                            <td>${formatMoney(data.revenue)}</td>
+                                            <td>${formatMoney(data.profit)}</td>
+                                            <td style="color: ${monthMargin >= GOAL_MARGIN ? 'var(--color-green)' : 'var(--color-orange)'}">
+                                                <strong>${monthMargin.toFixed(1)}%</strong>
+                                            </td>
+                                            <td><strong>${formatMoney(data.commission)}</strong></td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="perf-section">
+                    <div class="perf-section-title">🏆 Top 5 Most Profitable Shipments</div>
+                    <table class="month-breakdown-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Customer</th>
+                                <th>Profit</th>
+                                <th>Margin %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${topShipments.map(ship => `
+                                <tr>
+                                    <td>${ship.date}</td>
+                                    <td>${ship.customer}</td>
+                                    <td>${formatMoney(ship.profit)}</td>
+                                    <td style="color: var(--color-green)"><strong>${ship.margin.toFixed(1)}%</strong></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="perf-section">
+                    <div class="perf-section-title">⚠️ 5 Lowest Margin Shipments (Coaching Opportunities)</div>
+                    <table class="month-breakdown-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Customer</th>
+                                <th>Profit</th>
+                                <th>Margin %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${worstShipments.map(ship => `
+                                <tr>
+                                    <td>${ship.date}</td>
+                                    <td>${ship.customer}</td>
+                                    <td>${formatMoney(ship.profit)}</td>
+                                    <td style="color: var(--color-orange)"><strong>${ship.margin.toFixed(1)}%</strong></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="perf-section">
+                    <div class="perf-section-title">💡 Performance Insights & Recommendations</div>
+                    <div style="padding: 16px; background: var(--color-cream); border-radius: 8px; line-height: 1.8;">
+                        ${avgMargin >= GOAL_MARGIN ? `
+                            <p><strong style="color: var(--color-green);">✅ Meeting Goal!</strong> ${agentName} is performing at ${avgMargin.toFixed(1)}% margin, which is ${(avgMargin - GOAL_MARGIN).toFixed(1)}% above the ${GOAL_MARGIN}% goal.</p>
+                            <p><strong>Strengths:</strong> Consistently negotiating good rates. Top shipments show margins up to ${topShipments[0]?.margin.toFixed(1)}%.</p>
+                            <p><strong>Action:</strong> Recognize and reward this performance. Consider having them mentor other agents.</p>
+                        ` : `
+                            <p><strong style="color: var(--color-orange);">⚠️ Below Goal.</strong> ${agentName} is at ${avgMargin.toFixed(1)}% margin, which is ${Math.abs(avgMargin - GOAL_MARGIN).toFixed(1)}% below the ${GOAL_MARGIN}% goal.</p>
+                            <p><strong>Coaching Focus:</strong> Review the lowest margin shipments above. Identify patterns - same customers? Same carriers? Certain lanes?</p>
+                            <p><strong>Action Items:</strong></p>
+                            <ul style="margin-left: 20px;">
+                                <li>Review negotiation techniques for better buy rates</li>
+                                <li>Analyze why top performers achieve ${topShipments[0]?.margin.toFixed(1)}% vs lower performers</li>
+                                <li>Set incremental goal: ${Math.min(avgMargin + 5, GOAL_MARGIN).toFixed(1)}% next month</li>
+                            </ul>
+                        `}
+                        <p style="margin-top: 16px;"><strong>Average Commission per Shipment:</strong> ${formatMoney(avgCommPerShip)} - ${avgCommPerShip > 10 ? 'Excellent efficiency!' : 'Room for improvement with higher margin deals.'}</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('perfModal').style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('perfModal').style.display = 'none';
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('perfModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+        
         function renderTable(data) {
             const html = `
                 <table>
@@ -944,7 +1233,7 @@
                     <tbody>
                         ${data.map(row => `
                             <tr>
-                                <td>${formatDate(row.date)}</td>
+                                <td>${row.date}</td>
                                 <td style="font-family: var(--font-mono); font-weight: 600;">${row.refNumber}</td>
                                 <td>${row.customer}</td>
                                 <td>${row.carrier}</td>
@@ -969,7 +1258,7 @@
             document.getElementById('tableWrapper').innerHTML = html;
             document.getElementById('tableCount').textContent = data.length + ' records';
         }
-
+        
         function populateFilters() {
             const agents = [...new Set(processedData.map(r => r.salesRep))].sort();
             const agentFilter = document.getElementById('agentFilter');
@@ -986,17 +1275,12 @@
             const typeFilter = document.getElementById('typeFilter').value;
             const statusFilter = document.getElementById('statusFilter').value;
 
-            let filtered = processedData;
-
-            if (agentFilter) {
-                filtered = filtered.filter(r => r.salesRep === agentFilter);
-            }
-            if (typeFilter) {
-                filtered = filtered.filter(r => r.agentType === typeFilter);
-            }
-            if (statusFilter) {
-                filtered = filtered.filter(r => r.status === statusFilter);
-            }
+            const filtered = processedData.filter(r => {
+                if (agentFilter && r.salesRep !== agentFilter) return false;
+                if (typeFilter && r.agentType !== typeFilter) return false;
+                if (statusFilter && r.status !== statusFilter) return false;
+                return true;
+            });
 
             renderTable(filtered);
         }
@@ -1025,7 +1309,7 @@
                 return 0;
             });
 
-            applyFilters();
+            renderTable(processedData);
 
             document.querySelectorAll('th').forEach(th => {
                 th.classList.remove('sort-asc', 'sort-desc');
@@ -1038,7 +1322,7 @@
                 ['Date', 'Order#', 'Commission ID', 'Customer', 'Carrier', 'Agent', 'Type', 'Status', 
                  'Revenue', 'Cost', 'Profit', 'Margin %', 'Commission'],
                 ...processedData.map(r => [
-                    formatDate(r.date),
+                    r.date,
                     r.refNumber,
                     r.commissionId,
                     r.customer,
@@ -1063,29 +1347,11 @@
             URL.revokeObjectURL(url);
         }
 
-        function clearFile() {
-            rawData = [];
-            processedData = [];
-            fileInput.value = '';
-            document.getElementById('fileInfo').style.display = 'none';
-            document.getElementById('statsGrid').style.display = 'none';
-            document.getElementById('controls').style.display = 'none';
-            document.getElementById('repSummary').style.display = 'none';
-            document.getElementById('tableContainer').style.display = 'none';
-        }
-
         function formatMoney(num) {
             return '$' + Math.abs(num).toLocaleString('en-US', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             });
-        }
-
-        function formatDate(dateStr) {
-            if (!dateStr) return '';
-            const d = new Date(dateStr);
-            if (isNaN(d.getTime())) return dateStr;
-            return d.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
         }
     </script>
 </body>

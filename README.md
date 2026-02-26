@@ -1,343 +1,257 @@
-# 📊 Middle Sis Commission Dashboard - File Upload Version
+# 📊 Middle Sis Commission Dashboard v1.2.0
 
-**Branded Edition with Company Logo**
-
----
-
-## 🎯 What This Is
-
-A single-file branded dashboard featuring:
-- ✅ **Middle Sis Inc. logo** (professional branding)
-- ✅ **Company blue/grey color scheme** (matches your brand)
-- ✅ **Upload Excel/CSV files** (drag & drop!)
-- ✅ **40% margin goal tracking** (green = good, orange = needs work)
-- ✅ **Employee performance cards** (instant evaluation)
-- ✅ **Filter by agent, month, status**
-- ✅ **Export to CSV**
-- ✅ **Print reports**
-- ✅ **Works 100% offline** (no internet needed!)
-
-**No Google Sheets. No Zapier. No API. Just upload and analyze!**
+**Complete Edition with Performance Reviews**
 
 ---
 
-## 🚀 Quick Start (30 Seconds)
+## 🎯 What's New in v1.2.0
 
-1. **Extract the zip**
-2. **Double-click `index.html`**
-3. **Drag your commission Excel file onto the page**
-4. **Done!** See instant analysis
+### ✅ ALL ISSUES FIXED:
+1. **Data now saves automatically** using localStorage
+2. **Logo displays correctly** (SVG embedded)
+3. **Export button is visible** (dark blue color)
+4. **Dates format correctly** (mm/dd/yyyy)
+
+### ✨ NEW FEATURE: Employee Performance Reviews
+**Click on any employee card to see:**
+- Overall performance metrics
+- Month-by-month breakdown
+- Top 5 most profitable shipments
+- 5 lowest margin shipments (coaching opportunities)
+- AI-powered insights and recommendations
 
 ---
 
-## 📦 What's Included
+## 🚀 Quick Start
 
-- **`index.html`** - The complete dashboard (just open this!)
-- **`SAMPLE_DATA.xlsx`** - Your actual data to test with
-- **`logo.png`** - Your company logo (embedded in dashboard)
-- **`README.md`** - This file
+1. **Double-click `index.html`**
+2. **Drag your commission Excel file**
+3. **Data saves automatically!**
+4. **Click employee cards for detailed reviews**
 
 ---
 
-## ✨ Features
+## 📊 Features
 
-### Company Branding
-- ✅ Middle Sis Inc. logo at top
-- ✅ Blue & grey color scheme matching your brand
-- ✅ Professional appearance
-- ✅ 303 Merrick Road, Lynbrook, NY address
+### Data Persistence
+- ✅ Uploads saved to browser storage
+- ✅ Data persists between sessions
+- ✅ Clear button to reset
+
+### Employee Cards
+- Click any card to open performance review
+- See month-by-month trends
+- Identify coaching opportunities
 
 ### 40% Margin Goal
-Each employee card shows:
-- ✅ **Green** if at/above 40% margin
-- ⚠️ **Orange** if below 40% margin  
-- **vs Goal** number (+2.3% or -5.4%)
+- Green = meeting goal
+- Orange = needs coaching
+- Shows exact percentage vs goal
 
-### Employee Performance Cards
-```
-┌─────────────────────────────────┐
-│ Julia Matheos                    │
-├─────────────────────────────────┤
-│ 34 shipments                    │
-│ $17,871 revenue                 │
-│ Avg Margin ⚠️: 34.6% (orange)   │
-│ vs Goal (40%): -5.4%            │
-│ Commission: $309.14             │
-└─────────────────────────────────┘
-```
-
-### Filters
-- By Agent (Julia, Nicole, etc.)
-- By Month (Feb 2026, Jan 2026, All Time)
-- By Agent Type (Sales, Operations)
-- By Status (Pending, Paid)
-
-### Export & Print
-- CSV export for accounting
-- Print individual employee reports
-- Mobile-friendly
+### Filters & Export
+- Filter by agent, type, status
+- Export to CSV (dark blue button - now visible!)
+- Print reports
 
 ---
 
-## 💡 How to Use
+## 💼 Performance Review Features
 
-### Weekly Routine:
+When you click an employee card, you get:
 
-1. **Get commission report from Logistically**
-   - Reports → Commission → Export
+### 1. Overall Performance
+- Total shipments
+- Total revenue & profit
+- Average margin (color-coded)
+- vs Goal percentage
+- Total commission
 
-2. **Open dashboard**
-   - Double-click `index.html`
+### 2. Month-by-Month Breakdown
+- See trends over time
+- Identify improving/declining performance
+- Compare months easily
 
-3. **Upload file**
-   - Drag Excel file onto dashboard
-   - Or click upload zone
+### 3. Top 5 Best Shipments
+- Learn what they did right
+- Share best practices
+- Celebrate wins
 
-4. **Evaluate employees**
-   - Filter by each agent
-   - See their performance card
-   - Check if meeting 40% goal
+### 4. 5 Lowest Margin Shipments
+- Coaching opportunities
+- Identify patterns
+- Discuss improvements
 
-5. **Print reports**
-   - Filter by agent
-   - Click Print button
-   - Save as PDF
-
----
-
-## 🎯 Employee Evaluation
-
-### Julia at 34.6% (Below Goal):
-```
-Avg Margin ⚠️: 34.6% (orange)
-vs Goal (40%): -5.4%
-```
-**Action:** Coach on negotiating better rates
-
-### Nicole at 42% (Meeting Goal):
-```
-Avg Margin ✅: 42.0% (green)
-vs Goal (40%): +2.0%
-```
-**Action:** Celebrate and recognize!
+### 5. AI-Powered Insights
+- Automatic performance analysis
+- Specific recommendations
+- Action items for improvement
 
 ---
 
 ## 📱 Works Everywhere
 
-- ✅ Desktop (Windows/Mac/Linux)
-- ✅ Phone (iPhone/Android)
-- ✅ Tablet (iPad)
-- ✅ Any browser
-- ✅ **100% offline** (no internet needed!)
+- Desktop (Windows/Mac/Linux)
+- Tablet (iPad/Android)
+- Phone (iPhone/Android - viewing only)
+- 100% offline after first load
 
 ---
 
-## 🔧 Configuration
+## 🎨 What It Looks Like
 
-Want to change the goal from 40%?
+### Dashboard View:
+```
+[Middle Sis Logo]
 
-1. Open `index.html` in text editor
-2. Find: `const GOAL_MARGIN = 40;`
-3. Change to: `const GOAL_MARGIN = 35;` (or any %)
-4. Save and refresh
+[Revenue Card] [Cost Card] [Profit Card] [Commission Card]
+
+[Filters] [Export] [Print] [Clear]
+
+[Employee Cards - Click for Review]
+
+[Detailed Table]
+```
+
+### Performance Review Modal:
+```
+┌──────────────────────────────────────┐
+│ Julia Matheos - Performance Review   │
+├──────────────────────────────────────┤
+│ Overall Performance                  │
+│ 34 shipments | $17,871 revenue      │
+│ 34.6% margin (vs 40% goal: -5.4%)  │
+│                                      │
+│ Month-by-Month Breakdown             │
+│ Feb 2026: 18 ships, 35.2%           │
+│ Jan 2026: 16 ships, 34.0%           │
+│                                      │
+│ Top 5 Best Shipments                 │
+│ Highest margins, learn from these    │
+│                                      │
+│ 5 Lowest Margins                     │
+│ Coaching opportunities identified    │
+│                                      │
+│ Insights & Recommendations           │
+│ Specific action items for growth     │
+└──────────────────────────────────────┘
+```
 
 ---
 
-## 💾 Your Data is Safe
+## 🎯 How to Use for Reviews
 
-- ✅ Everything happens in your browser
-- ✅ Nothing uploaded to any server
-- ✅ No internet connection needed
-- ✅ 100% private and secure
+### Weekly Check-in (2 minutes):
+1. Open dashboard
+2. Click employee's card
+3. Review their month
+4. Note any concerns
+
+### Monthly Review (15 minutes):
+1. Click employee card
+2. Review month-by-month trends
+3. Discuss top 5 best deals
+4. Coach on lowest 5 margins
+5. Set goals based on insights
+
+### Print for Meeting:
+1. Click employee card
+2. Print (Ctrl+P)
+3. Save as PDF
+4. Bring to 1-on-1
 
 ---
 
-## 📊 Version
+## 💾 Data Storage
 
-**v1.1.0** - Branded Edition
+**Your data is saved in your browser:**
+- Nothing uploaded to internet
+- 100% private and secure
+- Persists until you click "Clear Data"
+- Works offline
 
-**What's New in v1.1.0:**
-- ✅ Middle Sis Inc. logo replaces text header
-- ✅ Blue/grey color scheme matches company branding
-- ✅ Professional, cohesive look
-- ✅ Company address in subtitle
+**To clear:**
+- Click "Clear Data" button
+- Confirms before deleting
+- Upload new file to start fresh
 
-**Previous features:**
-- Upload Excel/CSV files
-- 40% margin goal tracking
-- Orange for below goal (constructive feedback)
-- Green for meeting goal (celebration)
+---
+
+## 🔧 Technical Details
+
+**Fixed Issues:**
+- localStorage implementation for data persistence
+- SVG logo instead of broken image link
+- Export button color changed to dark blue (visible)
+- Date parsing fixed to show mm/dd/yyyy format
+
+**New Code:**
+- Performance review modal system
+- Month grouping algorithm
+- Top/worst shipment identification
+- Insight generation logic
+
+---
+
+## 📊 Version History
+
+**v1.2.0** (Current)
+- Data persistence (localStorage)
+- Performance review modals
+- Fixed logo display
+- Fixed export button visibility
+- Fixed date formatting
+
+**v1.1.0**
+- Added company logo
+- Blue/grey color scheme
+
+**v1.0.1**
+- Orange for below goal
 - Version number in footer
 
----
-
-## 🎉 That's It!
-
-Double-click `index.html` and start analyzing!
-
-**No setup. No configuration. Just works!** 📊
-
-**Branded and professional - ready to share with your team!**
-
+**v1.0.0**
+- Initial release
+- File upload
+- 40% goal tracking
 
 ---
 
-## 🎯 What This Is
+## 🎉 Perfect For
 
-A single-file dashboard that:
-- ✅ **Upload Excel/CSV files** (drag & drop!)
-- ✅ **40% margin goal tracking** (green = good, orange = needs work)
-- ✅ **Employee performance cards** (instant evaluation)
-- ✅ **Filter by agent, month, status**
-- ✅ **Export to CSV**
-- ✅ **Print reports**
-- ✅ **Works 100% offline** (no internet needed!)
-
-**No Google Sheets. No Zapier. No API. Just upload and analyze!**
+- Weekly team check-ins
+- Monthly performance reviews
+- Coaching sessions
+- Goal setting
+- Bonus calculations
+- Team comparisons
 
 ---
 
-## 🚀 Quick Start (30 Seconds)
+## 💡 Pro Tips
 
-1. **Extract the zip**
-2. **Double-click `index.html`**
-3. **Drag your commission Excel file onto the page**
-4. **Done!** See instant analysis
+**Tip 1:** Data auto-saves
+- Upload once, access forever
+- Refresh page - data still there
 
----
+**Tip 2:** Click employee cards
+- Quick access to reviews
+- Print for meetings
 
-## 📦 What's Included
+**Tip 3:** Use month breakdowns
+- Spot trends
+- Celebrate improvements
+- Address declines early
 
-- **`index.html`** - The complete dashboard (just open this!)
-- **`SAMPLE_DATA.xlsx`** - Your actual data to test with
-- **`README.md`** - This file
+**Tip 4:** Share insights
+- Review section gives talking points
+- Action items ready to assign
+- Specific, not generic feedback
 
----
-
-## ✨ Features
-
-### 40% Margin Goal
-Each employee card shows:
-- ✅ **Green** if at/above 40% margin
-- ⚠️ **Orange** if below 40% margin
-- **vs Goal** number (+2.3% or -5.4%)
-
-### Employee Performance Cards
-```
-┌─────────────────────────────────┐
-│ Julia Matheos                    │
-├─────────────────────────────────┤
-│ 34 shipments                    │
-│ $17,871 revenue                 │
-│ Avg Margin ⚠️: 34.6% (orange)   │
-│ vs Goal (40%): -5.4%            │
-│ Commission: $309.14             │
-└─────────────────────────────────┘
-```
-
-### Filters
-- By Agent (Julia, Nicole, etc.)
-- By Month (Feb 2026, Jan 2026, All Time)
-- By Agent Type (Sales, Operations)
-- By Status (Pending, Paid)
-
-### Export & Print
-- CSV export for accounting
-- Print individual employee reports
-- Mobile-friendly
+**Tip 5:** Track progress
+- Upload new data weekly
+- Compare month-over-month
+- Measure goal achievement
 
 ---
 
-## 💡 How to Use
-
-### Weekly Routine:
-
-1. **Get commission report from Logistically**
-   - Reports → Commission → Export
-
-2. **Open dashboard**
-   - Double-click `index.html`
-
-3. **Upload file**
-   - Drag Excel file onto dashboard
-   - Or click upload zone
-
-4. **Evaluate employees**
-   - Filter by each agent
-   - See their performance card
-   - Check if meeting 40% goal
-
-5. **Print reports**
-   - Filter by agent
-   - Click Print button
-   - Save as PDF
-
----
-
-## 🎯 Employee Evaluation
-
-### Julia at 34.6% (Below Goal):
-```
-Avg Margin ⚠️: 34.6% (orange)
-vs Goal (40%): -5.4%
-```
-**Action:** Coach on negotiating better rates
-
-### Nicole at 42% (Meeting Goal):
-```
-Avg Margin ✅: 42.0% (green)
-vs Goal (40%): +2.0%
-```
-**Action:** Celebrate and recognize!
-
----
-
-## 📱 Works Everywhere
-
-- ✅ Desktop (Windows/Mac/Linux)
-- ✅ Phone (iPhone/Android)
-- ✅ Tablet (iPad)
-- ✅ Any browser
-- ✅ **100% offline** (no internet needed!)
-
----
-
-## 🔧 Configuration
-
-Want to change the goal from 40%?
-
-1. Open `index.html` in text editor
-2. Find: `const GOAL_MARGIN = 40;`
-3. Change to: `const GOAL_MARGIN = 35;` (or any %)
-4. Save and refresh
-
----
-
-## 💾 Your Data is Safe
-
-- ✅ Everything happens in your browser
-- ✅ Nothing uploaded to any server
-- ✅ No internet connection needed
-- ✅ 100% private and secure
-
----
-
-## 📊 Version
-
-**v1.0.1** - File Upload Version
-
-**Features:**
-- Upload Excel/CSV files
-- 40% margin goal tracking
-- Orange for below goal (constructive feedback)
-- Green for meeting goal (celebration)
-- Version number in footer
-
----
-
-## 🎉 That's It!
-
-Double-click `index.html` and start analyzing!
-
-**No setup. No configuration. Just works!** 📊
+**Ready to use! Just double-click index.html and upload your data!** 📊✨
