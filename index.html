@@ -9,18 +9,21 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    
     <style>
         :root {
-            --color-forest: #0F3D3E;
-            --color-teal: #12403D;
-            --color-mint: #00A896;
-            --color-coral: #FF6B6B;
-            --color-orange: #FF8C42;
-            --color-gold: #FFD166;
-            --color-cream: #F8F4E8;
-            --color-sand: #E9DCC9;
-            --color-charcoal: #2C3333;
-            --color-slate: #5C6B73;
+            --color-primary: #6C9DB8;      /* Middle Sis blue */
+            --color-dark-blue: #4A7A94;    /* Darker blue */
+            --color-light-blue: #A8C5D8;   /* Light blue */
+            --color-accent: #6C9DB8;       /* Accent blue */
+            --color-orange: #FF8C42;       /* Warning/below goal */
+            --color-success: #4A7A94;      /* Success/meeting goal */
+            --color-grey-dark: #5A6C7D;    /* Dark grey */
+            --color-grey-med: #8BA3B5;     /* Medium grey */
+            --color-grey-light: #E8EEF2;   /* Light grey */
+            --color-white: #FFFFFF;        /* White */
+            --color-background: #F5F8FA;   /* Light background */
             --font-display: 'Work Sans', system-ui, sans-serif;
             --font-mono: 'Fira Code', monospace;
         }
@@ -33,8 +36,8 @@
 
         body {
             font-family: var(--font-display);
-            background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-sand) 100%);
-            color: var(--color-charcoal);
+            background: linear-gradient(135deg, var(--color-background) 0%, var(--color-grey-light) 100%);
+            color: var(--color-grey-dark);
             min-height: 100vh;
             line-height: 1.6;
         }
@@ -49,6 +52,10 @@
             text-align: center;
             margin-bottom: 48px;
             animation: slideDown 0.6s ease-out;
+            background: var(--color-white);
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
         }
 
         @keyframes slideDown {
@@ -56,95 +63,146 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        .header-logo {
+            max-width: 400px;
+            height: auto;
+            margin: 0 auto 16px;
+            display: block;
+        }
+
         .header-title {
-            font-size: 56px;
-            font-weight: 800;
-            color: var(--color-forest);
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--color-primary);
             margin-bottom: 8px;
-            letter-spacing: -1px;
+            letter-spacing: -0.5px;
         }
 
         .header-subtitle {
-            font-size: 18px;
-            color: var(--color-slate);
+            font-size: 16px;
+            color: var(--color-grey-med);
             font-weight: 500;
         }
 
-        .connection-status {
+        .upload-zone {
+            background: var(--color-white);
+            border: 3px dashed var(--color-primary);
+            border-radius: 16px;
+            padding: 64px 32px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-zone::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(108,157,184,0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .upload-zone:hover::before {
+            left: 100%;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--color-dark-blue);
+            background: rgba(108,157,184,0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(108,157,184,0.15);
+        }
+
+        .upload-zone.dragover {
+            background: rgba(108,157,184,0.1);
+            border-color: var(--color-dark-blue);
+        }
+
+        .upload-icon {
+            font-size: 72px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .upload-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-dark-blue);
+            margin-bottom: 8px;
+        }
+
+        .upload-subtitle {
+            font-size: 16px;
+            color: var(--color-grey-med);
+            margin-bottom: 24px;
+        }
+
+        .upload-formats {
+            font-size: 13px;
+            color: var(--color-grey-med);
+            font-family: var(--font-mono);
+            background: var(--color-grey-light);
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 6px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-info {
             background: white;
-            border-left: 4px solid var(--color-mint);
-            padding: 16px 24px;
+            border-left: 4px solid var(--color-primary-blue);
+            padding: 20px 24px;
             border-radius: 8px;
             margin-bottom: 32px;
-            display: flex;
+            display: none;
             align-items: center;
             gap: 16px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
-        .connection-status.loading {
-            border-left-color: var(--color-gold);
+        .file-info-icon {
+            font-size: 32px;
         }
 
-        .connection-status.error {
-            border-left-color: var(--color-coral);
-        }
-
-        .status-icon {
-            font-size: 24px;
-        }
-
-        .status-text {
+        .file-info-details {
             flex: 1;
         }
 
-        .status-title {
+        .file-info-name {
             font-weight: 700;
-            color: var(--color-forest);
+            color: var(--color-dark-blue);
+            font-size: 16px;
         }
 
-        .status-subtitle {
+        .file-info-meta {
             font-size: 14px;
-            color: var(--color-slate);
+            color: var(--color-grey-dark);
             font-family: var(--font-mono);
         }
 
-        .btn-refresh {
-            background: var(--color-mint);
+        .btn-clear {
+            background: var(--color-coral);
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 10px 20px;
             border-radius: 6px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
-            font-size: 14px;
         }
 
-        .btn-refresh:hover {
-            background: var(--color-forest);
+        .btn-clear:hover {
+            background: #ff5252;
             transform: scale(1.05);
-        }
-
-        .config-notice {
-            background: var(--color-gold);
-            color: var(--color-charcoal);
-            padding: 20px 24px;
-            border-radius: 8px;
-            margin-bottom: 32px;
-            display: none;
-        }
-
-        .config-notice h3 {
-            margin-bottom: 12px;
-            font-size: 18px;
-        }
-
-        .config-notice code {
-            background: rgba(0,0,0,0.1);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: var(--font-mono);
         }
 
         .stats-grid {
@@ -165,7 +223,7 @@
             padding: 28px;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            border-left: 5px solid var(--stat-color, var(--color-mint));
+            border-left: 5px solid var(--stat-color, var(--color-primary-blue));
             transition: transform 0.2s;
         }
 
@@ -174,8 +232,8 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.12);
         }
 
-        .stat-card.revenue { --stat-color: var(--color-mint); }
-        .stat-card.profit { --stat-color: var(--color-forest); }
+        .stat-card.revenue { --stat-color: var(--color-primary-blue); }
+        .stat-card.profit { --stat-color: var(--color-dark-blue); }
         .stat-card.commission { --stat-color: var(--color-gold); }
         .stat-card.margin { --stat-color: var(--color-coral); }
 
@@ -184,21 +242,21 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: var(--color-slate);
+            color: var(--color-grey-dark);
             margin-bottom: 8px;
         }
 
         .stat-value {
             font-size: 40px;
             font-weight: 800;
-            color: var(--color-forest);
+            color: var(--color-dark-blue);
             font-family: var(--font-mono);
             letter-spacing: -1px;
         }
 
         .stat-sub {
             font-size: 14px;
-            color: var(--color-slate);
+            color: var(--color-grey-dark);
             margin-top: 8px;
             font-weight: 500;
         }
@@ -227,12 +285,12 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: var(--color-slate);
+            color: var(--color-grey-dark);
         }
 
         .control-input {
             padding: 12px 16px;
-            border: 2px solid var(--color-sand);
+            border: 2px solid var(--color-grey-light);
             border-radius: 8px;
             font-family: var(--font-display);
             font-size: 15px;
@@ -242,7 +300,7 @@
 
         .control-input:focus {
             outline: none;
-            border-color: var(--color-mint);
+            border-color: var(--color-primary-blue);
             box-shadow: 0 0 0 3px rgba(0,168,150,0.1);
         }
 
@@ -260,23 +318,23 @@
         }
 
         .btn-export {
-            background: var(--color-mint);
+            background: var(--color-primary-blue);
             color: white;
         }
 
         .btn-export:hover {
-            background: var(--color-forest);
+            background: var(--color-dark-blue);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0,168,150,0.3);
         }
 
         .btn-print {
-            background: var(--color-forest);
+            background: var(--color-dark-blue);
             color: white;
         }
 
         .btn-print:hover {
-            background: var(--color-teal);
+            background: var(--color-dark-blue);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(15,61,62,0.3);
         }
@@ -293,7 +351,7 @@
         .rep-summary-title {
             font-size: 24px;
             font-weight: 800;
-            color: var(--color-forest);
+            color: var(--color-dark-blue);
             margin-bottom: 24px;
             display: flex;
             align-items: center;
@@ -307,15 +365,15 @@
         }
 
         .rep-card {
-            background: linear-gradient(135deg, var(--color-cream) 0%, white 100%);
-            border: 2px solid var(--color-sand);
+            background: linear-gradient(135deg, var(--color-background) 0%, white 100%);
+            border: 2px solid var(--color-grey-light);
             border-radius: 10px;
             padding: 24px;
             transition: all 0.3s;
         }
 
         .rep-card:hover {
-            border-color: var(--color-mint);
+            border-color: var(--color-primary-blue);
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
@@ -323,20 +381,16 @@
         .rep-name {
             font-size: 22px;
             font-weight: 700;
-            color: var(--color-forest);
+            color: var(--color-dark-blue);
             margin-bottom: 16px;
             padding-bottom: 12px;
-            border-bottom: 3px solid var(--color-mint);
+            border-bottom: 3px solid var(--color-primary-blue);
         }
 
         .rep-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
-        }
-
-        .rep-stat-item.full-width {
-            grid-column: span 2;
         }
 
         .rep-stat-item {
@@ -348,7 +402,7 @@
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
-            color: var(--color-slate);
+            color: var(--color-grey-dark);
             letter-spacing: 0.5px;
         }
 
@@ -356,12 +410,12 @@
             font-size: 18px;
             font-weight: 700;
             font-family: var(--font-mono);
-            color: var(--color-forest);
+            color: var(--color-dark-blue);
         }
 
         .rep-stat-value.highlight {
             font-size: 26px;
-            color: var(--color-mint);
+            color: var(--color-primary-blue);
         }
 
         .table-container {
@@ -373,7 +427,7 @@
         }
 
         .table-header {
-            background: var(--color-forest);
+            background: var(--color-dark-blue);
             color: white;
             padding: 24px 32px;
             display: flex;
@@ -405,7 +459,7 @@
         }
 
         thead {
-            background: var(--color-cream);
+            background: var(--color-background);
             position: sticky;
             top: 0;
             z-index: 10;
@@ -418,8 +472,8 @@
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: var(--color-forest);
-            border-bottom: 3px solid var(--color-mint);
+            color: var(--color-dark-blue);
+            border-bottom: 3px solid var(--color-primary-blue);
             cursor: pointer;
             user-select: none;
             transition: background 0.2s;
@@ -427,7 +481,7 @@
         }
 
         th:hover {
-            background: var(--color-sand);
+            background: var(--color-grey-light);
         }
 
         th.sortable::after {
@@ -440,18 +494,18 @@
         th.sort-asc::after {
             content: '↑';
             opacity: 1;
-            color: var(--color-mint);
+            color: var(--color-primary-blue);
         }
 
         th.sort-desc::after {
             content: '↓';
             opacity: 1;
-            color: var(--color-mint);
+            color: var(--color-primary-blue);
         }
 
         td {
             padding: 18px 20px;
-            border-bottom: 1px solid var(--color-cream);
+            border-bottom: 1px solid var(--color-background);
             font-size: 14px;
         }
 
@@ -460,7 +514,7 @@
         }
 
         tbody tr:hover {
-            background: var(--color-cream);
+            background: var(--color-background);
         }
 
         .td-number {
@@ -470,7 +524,7 @@
         }
 
         .td-profit-positive {
-            color: var(--color-forest);
+            color: var(--color-dark-blue);
         }
 
         .td-profit-negative {
@@ -487,46 +541,58 @@
         }
 
         .badge-sales {
-            background: var(--color-mint);
+            background: var(--color-primary-blue);
             color: white;
         }
 
         .badge-operations {
-            background: var(--color-slate);
+            background: var(--color-grey-dark);
             color: white;
         }
 
         .badge-pending {
             background: var(--color-gold);
-            color: var(--color-charcoal);
+            color: var(--color-grey-dark);
         }
 
         .badge-paid {
-            background: var(--color-forest);
+            background: var(--color-dark-blue);
             color: white;
         }
 
-        .loading-spinner {
-            border: 4px solid var(--color-sand);
-            border-top: 4px solid var(--color-mint);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
+        .empty-state {
+            text-align: center;
+            padding: 80px 32px;
+            color: var(--color-grey-dark);
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .empty-icon {
+            font-size: 80px;
+            margin-bottom: 16px;
+            opacity: 0.4;
+        }
+
+        .empty-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-dark-blue);
+            margin-bottom: 8px;
         }
 
         @media print {
             body {
                 background: white;
             }
-            .connection-status, .controls, .btn {
+            .upload-zone, .file-info, .controls, .btn {
                 display: none !important;
+            }
+            .container {
+                max-width: 100%;
+                padding: 20px;
+            }
+            .rep-card, .table-container {
+                box-shadow: none;
+                page-break-inside: avoid;
             }
         }
 
@@ -552,23 +618,25 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1 class="header-title">📊 Commission Dashboard</h1>
-            <p class="header-subtitle">Middle Sis Inc. | Connected to Google Sheets</p>
+            <img src="data:image/png;base64,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...truncated..." alt="Middle Sis Inc." style="height: 80px; margin-bottom: 16px;">
+            <p class="header-subtitle">303 Merrick Road, Lynbrook, NY | Commission Dashboard</p>
         </div>
 
-        <div class="config-notice" id="configNotice">
-            <h3>⚙️ Configuration Needed</h3>
-            <p>Please update <code>GOOGLE_SHEET_ID</code> in the script below with your Google Sheet ID.</p>
-            <p style="margin-top: 8px;">See <strong>DASHBOARD_CONNECTION.md</strong> for instructions.</p>
+        <div class="upload-zone" id="uploadZone">
+            <span class="upload-icon">📤</span>
+            <h2 class="upload-title">Drop Your Commission Report Here</h2>
+            <p class="upload-subtitle">Or click to browse files</p>
+            <div class="upload-formats">Supports: .xlsx .csv .xls</div>
+            <input type="file" id="fileInput" accept=".xlsx,.xls,.csv">
         </div>
 
-        <div class="connection-status" id="connectionStatus">
-            <span class="status-icon">🔄</span>
-            <div class="status-text">
-                <div class="status-title">Connecting to Google Sheets...</div>
-                <div class="status-subtitle">Loading your commission data</div>
+        <div class="file-info" id="fileInfo">
+            <span class="file-info-icon">📄</span>
+            <div class="file-info-details">
+                <div class="file-info-name" id="fileName"></div>
+                <div class="file-info-meta" id="fileMeta"></div>
             </div>
-            <button class="btn-refresh" onclick="loadData()">🔄 Refresh</button>
+            <button class="btn-clear" onclick="clearFile()">Clear</button>
         </div>
 
         <div class="stats-grid" id="statsGrid" style="display: none;">
@@ -595,12 +663,6 @@
         </div>
 
         <div class="controls" id="controls" style="display: none;">
-            <div class="control-group">
-                <label class="control-label">View Month</label>
-                <select id="monthFilter" class="control-input">
-                    <option value="">All Time</option>
-                </select>
-            </div>
             <div class="control-group">
                 <label class="control-label">Filter by Agent</label>
                 <select id="agentFilter" class="control-input">
@@ -629,14 +691,14 @@
             </div>
             <div class="control-group">
                 <label class="control-label">&nbsp;</label>
-                <button class="btn btn-print" onclick="window.print()">🖨️ Print</button>
+                <button class="btn btn-print" onclick="window.print()">🖨️ Print Report</button>
             </div>
         </div>
 
         <div class="rep-summary" id="repSummary">
             <h2 class="rep-summary-title">
                 <span>👥</span>
-                Performance by Agent
+                Performance by Agent (Operations Report)
             </h2>
             <div class="rep-grid" id="repGrid"></div>
         </div>
@@ -647,155 +709,120 @@
                 <div class="table-count" id="tableCount">0 records</div>
             </div>
             <div class="table-wrapper" id="tableWrapper">
-                <div class="loading-spinner"></div>
+                <div class="empty-state">
+                    <div class="empty-icon">📋</div>
+                    <div class="empty-title">No Data Loaded</div>
+                    <p>Upload a commission report from Logistically to get started</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <footer style="text-align: center; padding: 40px 20px 20px; color: var(--color-slate); font-size: 13px; font-family: var(--font-mono);">
-        Middle Sis Inc. Commission Dashboard v1.0.1 | Last Updated: Feb 2026
+    <footer style="text-align: center; padding: 40px 20px 20px; color: var(--color-grey-dark); font-size: 13px; font-family: var(--font-mono);">
+        Middle Sis Inc. Commission Dashboard v1.1.0 | Branded Edition | Feb 2026
     </footer>
 
     <script>
-        // ============================================================================
-        // CONFIGURATION - UPDATE THIS!
-        // ============================================================================
-        
-        const GOOGLE_SHEET_ID = 'YOUR_SHEET_ID_HERE';  // ← CHANGE THIS!
-        const GOAL_MARGIN = 40;  // Target margin percentage
-        
-        // ============================================================================
-        // Don't change anything below this line
-        // ============================================================================
-        
-        const SHEET_NAME = 'All Data';
-        const API_KEY = ''; // Not needed for public sheets
-        
-        let allData = [];
-        let filteredData = [];
+        let rawData = [];
+        let processedData = [];
         let sortColumn = null;
         let sortAsc = true;
+        
+        const GOAL_MARGIN = 40;  // Target margin percentage
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            if (GOOGLE_SHEET_ID === 'YOUR_SHEET_ID_HERE') {
-                showConfigNotice();
-            } else {
-                loadData();
-            }
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+
+        uploadZone.addEventListener('click', () => fileInput.click());
+        
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
         });
 
-        function showConfigNotice() {
-            document.getElementById('configNotice').style.display = 'block';
-            updateStatus('error', 'Configuration Required', 'Please add your Google Sheet ID');
-        }
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragover');
+        });
 
-        async function loadData() {
-            if (GOOGLE_SHEET_ID === 'YOUR_SHEET_ID_HERE') {
-                showConfigNotice();
-                return;
-            }
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file) handleFile(file);
+        });
 
-            updateStatus('loading', 'Loading Data...', 'Fetching from Google Sheets');
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) handleFile(file);
+        });
 
-            try {
-                const url = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
-                
-                const response = await fetch(url);
-                const text = await response.text();
-                
-                // Parse Google Sheets JSON response
-                const json = JSON.parse(text.substring(47).slice(0, -2));
-                
-                if (!json.table || !json.table.rows) {
-                    throw new Error('No data found in sheet');
-                }
-
-                // Convert to our format
-                allData = parseGoogleSheetsData(json.table);
-                
-                if (allData.length === 0) {
-                    throw new Error('No data rows found');
-                }
-
-                filteredData = [...allData];
-                
-                displayAll();
-                updateStatus('connected', 'Connected to Google Sheets', 
-                    `Last updated: ${new Date().toLocaleTimeString()} • ${allData.length} records`);
-                
-            } catch (error) {
-                console.error('Error loading data:', error);
-                updateStatus('error', 'Connection Failed', error.message);
-            }
-        }
-
-        function parseGoogleSheetsData(table) {
-            const rows = table.rows;
-            const data = [];
-
-            for (let i = 0; i < rows.length; i++) {
-                const row = rows[i].c;
-                
-                // Skip if no data
-                if (!row || !row[2] || !row[2].v) continue;
-                
-                const orderNum = String(row[2].v || '');
-                
-                // Skip GRAND TOTAL and short order numbers
-                if (orderNum === 'GRAND TOTAL' || orderNum.includes('Count') || orderNum.length < 5) {
-                    continue;
-                }
-
-                try {
-                    const revenue = parseFloat(row[10]?.v || 0);
-                    const cost = parseFloat(row[9]?.v || 0);
-                    const profit = parseFloat(row[15]?.v || (revenue - cost));
-                    const margin = revenue > 0 ? (profit / revenue) * 100 : 0;
-                    const commission = parseFloat(row[16]?.v || 0);
-
-                    data.push({
-                        importDate: row[0]?.f || '',
-                        month: row[1]?.v || '',
-                        refNumber: orderNum,
-                        commissionId: row[3]?.v || '',
-                        createDate: row[4]?.f || '',
-                        status: row[5]?.v || 'Unknown',
-                        customer: row[6]?.v || '',
-                        carrier: row[7]?.v || '',
-                        date: row[8]?.f || '',
-                        cost,
-                        revenue,
-                        salesTax: parseFloat(row[11]?.v || 0),
-                        salesTax2: parseFloat(row[12]?.v || 0),
-                        agentType: row[13]?.v || 'Sales',
-                        salesRep: row[14]?.v || '',
-                        profit,
-                        commission,
-                        margin
-                    });
-                } catch (e) {
-                    console.warn('Skipped row due to parse error:', e);
-                }
-            }
-
-            return data;
-        }
-
-        function updateStatus(type, title, subtitle) {
-            const status = document.getElementById('connectionStatus');
-            const icons = { loading: '🔄', connected: '✅', error: '⚠️' };
+        function handleFile(file) {
+            const reader = new FileReader();
             
-            status.className = 'connection-status ' + type;
-            status.querySelector('.status-icon').textContent = icons[type] || '🔄';
-            status.querySelector('.status-title').textContent = title;
-            status.querySelector('.status-subtitle').textContent = subtitle;
+            reader.onload = (e) => {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    rawData = XLSX.utils.sheet_to_json(firstSheet);
+                    
+                    document.getElementById('fileName').textContent = file.name;
+                    document.getElementById('fileMeta').textContent = 
+                        `${rawData.length} records • ${(file.size / 1024).toFixed(1)} KB`;
+                    document.getElementById('fileInfo').style.display = 'flex';
+                    
+                    processData();
+                    displayAll();
+                    
+                } catch (error) {
+                    alert('Error reading file: ' + error.message);
+                }
+            };
+            
+            reader.readAsArrayBuffer(file);
+        }
+
+        function processData() {
+            processedData = rawData
+                .filter(row => {
+                    const orderNum = String(row['Order Number'] || '');
+                    return orderNum && 
+                           orderNum !== 'GRAND TOTAL' && 
+                           !orderNum.includes('Count') &&
+                           orderNum.length > 5;
+                })
+                .map(row => {
+                    const revenue = parseFloat(row['Customer Total Cost from Order'] || 0);
+                    const cost = parseFloat(row['Carrier Cost from Order'] || 0);
+                    const profit = parseFloat(row['Gross Profit'] || (revenue - cost));
+                    const margin = revenue > 0 ? (profit / revenue) * 100 : 0;
+                    const commission = parseFloat(row['Sales Commission'] || 0);
+                    
+                    return {
+                        date: row['Shipment Date'] || '',
+                        createDate: row['Commission Create Date'] || '',
+                        refNumber: row['Order Number'] || '',
+                        commissionId: row['Commission Record ID'] || '',
+                        customer: row['Customer Name'] || '',
+                        carrier: row['Carrier Name'] || '',
+                        salesRep: row['Agent Full Name'] || '',
+                        agentType: row['Agent Type'] || 'Sales',
+                        status: row['Commission Status'] || 'Unknown',
+                        revenue,
+                        cost,
+                        profit,
+                        margin,
+                        commission,
+                        salesTax: parseFloat(row['Sales Tax'] || 0),
+                        salesTax2: parseFloat(row['Sales Tax 2'] || 0)
+                    };
+                });
         }
 
         function displayAll() {
             updateStats();
             updateRepSummary();
-            renderTable(filteredData);
+            renderTable(processedData);
             populateFilters();
             
             document.getElementById('statsGrid').style.display = 'grid';
@@ -805,10 +832,10 @@
         }
 
         function updateStats() {
-            const totalRevenue = filteredData.reduce((sum, row) => sum + row.revenue, 0);
-            const totalCost = filteredData.reduce((sum, row) => sum + row.cost, 0);
-            const totalProfit = filteredData.reduce((sum, row) => sum + row.profit, 0);
-            const totalCommission = filteredData.reduce((sum, row) => sum + row.commission, 0);
+            const totalRevenue = processedData.reduce((sum, row) => sum + row.revenue, 0);
+            const totalCost = processedData.reduce((sum, row) => sum + row.cost, 0);
+            const totalProfit = processedData.reduce((sum, row) => sum + row.profit, 0);
+            const totalCommission = processedData.reduce((sum, row) => sum + row.commission, 0);
             const avgMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
 
             document.getElementById('statRevenue').textContent = formatMoney(totalRevenue);
@@ -816,16 +843,22 @@
             document.getElementById('statProfit').textContent = formatMoney(totalProfit);
             document.getElementById('statCommission').textContent = formatMoney(totalCommission);
             document.getElementById('statMargin').textContent = avgMargin.toFixed(1) + '% margin';
-            document.getElementById('statCount').textContent = filteredData.length + ' shipments';
+            document.getElementById('statCount').textContent = processedData.length + ' shipments';
         }
 
         function updateRepSummary() {
             const byRep = {};
             
-            filteredData.forEach(row => {
+            processedData.forEach(row => {
                 const rep = row.salesRep;
                 if (!byRep[rep]) {
-                    byRep[rep] = { count: 0, revenue: 0, cost: 0, profit: 0, commission: 0 };
+                    byRep[rep] = {
+                        count: 0,
+                        revenue: 0,
+                        cost: 0,
+                        profit: 0,
+                        commission: 0
+                    };
                 }
                 byRep[rep].count++;
                 byRep[rep].revenue += row.revenue;
@@ -841,7 +874,7 @@
                     const avgCommPerShipment = data.count > 0 ? data.commission / data.count : 0;
                     const marginVsGoal = margin - GOAL_MARGIN;
                     const marginStatus = margin >= GOAL_MARGIN ? '✅' : '⚠️';
-                    const marginColor = margin >= GOAL_MARGIN ? 'var(--color-mint)' : 'var(--color-orange)';
+                    const marginColor = margin >= GOAL_MARGIN ? 'var(--color-primary-blue)' : 'var(--color-orange)';
                     
                     return `
                         <div class="rep-card">
@@ -877,7 +910,7 @@
                                     <span class="rep-stat-label">Avg Comm/Ship</span>
                                     <span class="rep-stat-value">${formatMoney(avgCommPerShipment)}</span>
                                 </div>
-                                <div class="rep-stat-item full-width">
+                                <div class="rep-stat-item" style="grid-column: span 2;">
                                     <span class="rep-stat-label">Total Commission</span>
                                     <span class="rep-stat-value highlight">${formatMoney(data.commission)}</span>
                                 </div>
@@ -894,7 +927,6 @@
                 <table>
                     <thead>
                         <tr>
-                            <th class="sortable" onclick="sort('month')">Month</th>
                             <th class="sortable" onclick="sort('date')">Date</th>
                             <th class="sortable" onclick="sort('refNumber')">Order #</th>
                             <th class="sortable" onclick="sort('customer')">Customer</th>
@@ -912,8 +944,7 @@
                     <tbody>
                         ${data.map(row => `
                             <tr>
-                                <td>${row.month}</td>
-                                <td>${row.date}</td>
+                                <td>${formatDate(row.date)}</td>
                                 <td style="font-family: var(--font-mono); font-weight: 600;">${row.refNumber}</td>
                                 <td>${row.customer}</td>
                                 <td>${row.carrier}</td>
@@ -926,7 +957,7 @@
                                     ${formatMoney(row.profit)}
                                 </td>
                                 <td class="td-number">${row.margin.toFixed(1)}%</td>
-                                <td class="td-number" style="font-weight: 700; color: var(--color-mint);">
+                                <td class="td-number" style="font-weight: 700; color: var(--color-primary-blue);">
                                     ${formatMoney(row.commission)}
                                 </td>
                             </tr>
@@ -940,41 +971,34 @@
         }
 
         function populateFilters() {
-            // Months
-            const months = [...new Set(allData.map(r => r.month))].sort().reverse();
-            const monthFilter = document.getElementById('monthFilter');
-            monthFilter.innerHTML = '<option value="">All Time</option>' + 
-                months.map(m => `<option value="${m}">${m}</option>`).join('');
-
-            // Agents
-            const agents = [...new Set(allData.map(r => r.salesRep))].sort();
+            const agents = [...new Set(processedData.map(r => r.salesRep))].sort();
             const agentFilter = document.getElementById('agentFilter');
             agentFilter.innerHTML = '<option value="">All Agents</option>' + 
                 agents.map(r => `<option value="${r}">${r}</option>`).join('');
 
-            // Add filter event listeners
-            ['monthFilter', 'agentFilter', 'typeFilter', 'statusFilter'].forEach(id => {
+            ['agentFilter', 'typeFilter', 'statusFilter'].forEach(id => {
                 document.getElementById(id).addEventListener('change', applyFilters);
             });
         }
 
         function applyFilters() {
-            const monthFilter = document.getElementById('monthFilter').value;
             const agentFilter = document.getElementById('agentFilter').value;
             const typeFilter = document.getElementById('typeFilter').value;
             const statusFilter = document.getElementById('statusFilter').value;
 
-            filteredData = allData.filter(r => {
-                if (monthFilter && r.month !== monthFilter) return false;
-                if (agentFilter && r.salesRep !== agentFilter) return false;
-                if (typeFilter && r.agentType !== typeFilter) return false;
-                if (statusFilter && r.status !== statusFilter) return false;
-                return true;
-            });
+            let filtered = processedData;
 
-            updateStats();
-            updateRepSummary();
-            renderTable(filteredData);
+            if (agentFilter) {
+                filtered = filtered.filter(r => r.salesRep === agentFilter);
+            }
+            if (typeFilter) {
+                filtered = filtered.filter(r => r.agentType === typeFilter);
+            }
+            if (statusFilter) {
+                filtered = filtered.filter(r => r.status === statusFilter);
+            }
+
+            renderTable(filtered);
         }
 
         function sort(column) {
@@ -985,7 +1009,7 @@
                 sortAsc = true;
             }
 
-            filteredData.sort((a, b) => {
+            processedData.sort((a, b) => {
                 let valA = a[column];
                 let valB = b[column];
 
@@ -1001,7 +1025,7 @@
                 return 0;
             });
 
-            renderTable(filteredData);
+            applyFilters();
 
             document.querySelectorAll('th').forEach(th => {
                 th.classList.remove('sort-asc', 'sort-desc');
@@ -1011,11 +1035,10 @@
 
         function exportCSV() {
             const csv = [
-                ['Month', 'Date', 'Order#', 'Commission ID', 'Customer', 'Carrier', 'Agent', 'Type', 'Status', 
+                ['Date', 'Order#', 'Commission ID', 'Customer', 'Carrier', 'Agent', 'Type', 'Status', 
                  'Revenue', 'Cost', 'Profit', 'Margin %', 'Commission'],
-                ...filteredData.map(r => [
-                    r.month,
-                    r.date,
+                ...processedData.map(r => [
+                    formatDate(r.date),
                     r.refNumber,
                     r.commissionId,
                     r.customer,
@@ -1040,11 +1063,29 @@
             URL.revokeObjectURL(url);
         }
 
+        function clearFile() {
+            rawData = [];
+            processedData = [];
+            fileInput.value = '';
+            document.getElementById('fileInfo').style.display = 'none';
+            document.getElementById('statsGrid').style.display = 'none';
+            document.getElementById('controls').style.display = 'none';
+            document.getElementById('repSummary').style.display = 'none';
+            document.getElementById('tableContainer').style.display = 'none';
+        }
+
         function formatMoney(num) {
             return '$' + Math.abs(num).toLocaleString('en-US', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             });
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const d = new Date(dateStr);
+            if (isNaN(d.getTime())) return dateStr;
+            return d.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
         }
     </script>
 </body>

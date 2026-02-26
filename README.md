@@ -1,479 +1,343 @@
-# ⚡ Middle Sis Commission System - Complete Automation with Zapier
+# 📊 Middle Sis Commission Dashboard - File Upload Version
 
-**Email → Drive → Sheets → Dashboard - Fully Automated**
+**Branded Edition with Company Logo**
 
 ---
 
 ## 🎯 What This Is
 
-A complete, end-to-end automated commission tracking system using:
-- ⚡ **Zapier** - Detects emails, saves to Drive
-- 📁 **Google Drive** - Organized file storage
-- 📊 **Google Sheets** - Data organization & summaries
-- 🎨 **Dashboard** - Beautiful visualizations
+A single-file branded dashboard featuring:
+- ✅ **Middle Sis Inc. logo** (professional branding)
+- ✅ **Company blue/grey color scheme** (matches your brand)
+- ✅ **Upload Excel/CSV files** (drag & drop!)
+- ✅ **40% margin goal tracking** (green = good, orange = needs work)
+- ✅ **Employee performance cards** (instant evaluation)
+- ✅ **Filter by agent, month, status**
+- ✅ **Export to CSV**
+- ✅ **Print reports**
+- ✅ **Works 100% offline** (no internet needed!)
 
-**Cost:** $0 (uses free tiers)  
-**Manual work:** 30 seconds per week  
-**Setup time:** 25 minutes total
+**No Google Sheets. No Zapier. No API. Just upload and analyze!**
+
+---
+
+## 🚀 Quick Start (30 Seconds)
+
+1. **Extract the zip**
+2. **Double-click `index.html`**
+3. **Drag your commission Excel file onto the page**
+4. **Done!** See instant analysis
 
 ---
 
 ## 📦 What's Included
 
-### 1. `ZAPIER_SETUP.md`
-Complete Zapier configuration guide:
-- Create Zap (5 min)
-- Connect Gmail
-- Save to Google Drive
-- Test automation
-
-### 2. `GOOGLE_SHEETS_SETUP.md`
-Google Sheets template setup:
-- Create organized sheet (10 min)
-- Auto-calculating formulas
-- Monthly summaries
-- Agent performance tracking
-
-### 3. `index.html`
-Beautiful connected dashboard:
-- Pulls from Google Sheets automatically
-- Month selector
-- Agent filters
-- Historical comparisons
-- Export & print features
-
-### 4. `DASHBOARD_CONNECTION.md`
-Connect dashboard to sheets:
-- Make sheet public (2 min)
-- Get Sheet ID
-- Update configuration
-- Deploy to web
-
-### 5. `README.md`
-This file - complete overview
+- **`index.html`** - The complete dashboard (just open this!)
+- **`SAMPLE_DATA.xlsx`** - Your actual data to test with
+- **`logo.png`** - Your company logo (embedded in dashboard)
+- **`README.md`** - This file
 
 ---
 
-## 🚀 Quick Start (25 Minutes Total)
+## ✨ Features
 
-### Phase 1: Zapier Setup (5 min)
-1. Create Zapier account (free)
-2. Create Zap: Gmail → Google Drive
-3. Test with email
-4. Turn on Zap
+### Company Branding
+- ✅ Middle Sis Inc. logo at top
+- ✅ Blue & grey color scheme matching your brand
+- ✅ Professional appearance
+- ✅ 303 Merrick Road, Lynbrook, NY address
 
-**Result:** Emails automatically save to Drive ✅
+### 40% Margin Goal
+Each employee card shows:
+- ✅ **Green** if at/above 40% margin
+- ⚠️ **Orange** if below 40% margin  
+- **vs Goal** number (+2.3% or -5.4%)
 
-### Phase 2: Google Sheets (10 min)
-1. Create Google Sheet
-2. Add 3 tabs (All Data, Monthly Summary, Agent Summary)
-3. Add formulas (copy/paste from guide)
-4. Test with sample data
-
-**Result:** Organized data with auto-summaries ✅
-
-### Phase 3: Dashboard (10 min)
-1. Make Google Sheet public (view-only)
-2. Get Sheet ID
-3. Update dashboard config
-4. Open dashboard
-
-**Result:** Beautiful visualizations ✅
-
----
-
-## 💰 Cost Breakdown
-
-### Free Tier (Recommended):
-- **Zapier:** Free (100 tasks/month)
-- **Google Drive:** Free (15GB storage)
-- **Google Sheets:** Free
-- **GitHub Pages:** Free (hosting)
-- **Total: $0/month**
-
-**Perfect for:**
-- Weekly commission reports
-- Monthly summaries
-- Small teams
-
-### Paid Tier (Optional):
-If you need 100% automation (no copy/paste):
-- **Zapier:** $20/month (Email Parser add-on)
-- Eliminates the 30-second paste step
-- **Only needed if getting reports daily**
-
----
-
-## 🔄 Your Complete Workflow
-
-### Automatic Steps (Zero Work):
-
+### Employee Performance Cards
 ```
-1. Logistically emails commission report
-   ↓
-2. Zapier detects email (instant)
-   ↓
-3. Saves attachment to Google Drive
-   Organized by date: /Commission Reports/2026-02-25_Report.xlsx
-   ↓
-4. You get notified
+┌─────────────────────────────────┐
+│ Julia Matheos                    │
+├─────────────────────────────────┤
+│ 34 shipments                    │
+│ $17,871 revenue                 │
+│ Avg Margin ⚠️: 34.6% (orange)   │
+│ vs Goal (40%): -5.4%            │
+│ Commission: $309.14             │
+└─────────────────────────────────┘
 ```
 
-**Time: 0 seconds (automatic)**
+### Filters
+- By Agent (Julia, Nicole, etc.)
+- By Month (Feb 2026, Jan 2026, All Time)
+- By Agent Type (Sales, Operations)
+- By Status (Pending, Paid)
 
-### Semi-Automatic Steps (30 seconds/week):
+### Export & Print
+- CSV export for accounting
+- Print individual employee reports
+- Mobile-friendly
 
+---
+
+## 💡 How to Use
+
+### Weekly Routine:
+
+1. **Get commission report from Logistically**
+   - Reports → Commission → Export
+
+2. **Open dashboard**
+   - Double-click `index.html`
+
+3. **Upload file**
+   - Drag Excel file onto dashboard
+   - Or click upload zone
+
+4. **Evaluate employees**
+   - Filter by each agent
+   - See their performance card
+   - Check if meeting 40% goal
+
+5. **Print reports**
+   - Filter by agent
+   - Click Print button
+   - Save as PDF
+
+---
+
+## 🎯 Employee Evaluation
+
+### Julia at 34.6% (Below Goal):
 ```
-5. You open Google Drive folder (10 sec)
-   ↓
-6. Open latest file (5 sec)
-   ↓
-7. Copy data (Ctrl+A, Ctrl+C) (5 sec)
-   ↓
-8. Paste into Google Sheet (Ctrl+V) (5 sec)
-   ↓
-9. Summaries update automatically
-   Monthly totals, agent performance, trends
-   ↓
-10. Dashboard updates automatically
-    Open dashboard, click refresh, see new data
+Avg Margin ⚠️: 34.6% (orange)
+vs Goal (40%): -5.4%
+```
+**Action:** Coach on negotiating better rates
+
+### Nicole at 42% (Meeting Goal):
+```
+Avg Margin ✅: 42.0% (green)
+vs Goal (40%): +2.0%
+```
+**Action:** Celebrate and recognize!
+
+---
+
+## 📱 Works Everywhere
+
+- ✅ Desktop (Windows/Mac/Linux)
+- ✅ Phone (iPhone/Android)
+- ✅ Tablet (iPad)
+- ✅ Any browser
+- ✅ **100% offline** (no internet needed!)
+
+---
+
+## 🔧 Configuration
+
+Want to change the goal from 40%?
+
+1. Open `index.html` in text editor
+2. Find: `const GOAL_MARGIN = 40;`
+3. Change to: `const GOAL_MARGIN = 35;` (or any %)
+4. Save and refresh
+
+---
+
+## 💾 Your Data is Safe
+
+- ✅ Everything happens in your browser
+- ✅ Nothing uploaded to any server
+- ✅ No internet connection needed
+- ✅ 100% private and secure
+
+---
+
+## 📊 Version
+
+**v1.1.0** - Branded Edition
+
+**What's New in v1.1.0:**
+- ✅ Middle Sis Inc. logo replaces text header
+- ✅ Blue/grey color scheme matches company branding
+- ✅ Professional, cohesive look
+- ✅ Company address in subtitle
+
+**Previous features:**
+- Upload Excel/CSV files
+- 40% margin goal tracking
+- Orange for below goal (constructive feedback)
+- Green for meeting goal (celebration)
+- Version number in footer
+
+---
+
+## 🎉 That's It!
+
+Double-click `index.html` and start analyzing!
+
+**No setup. No configuration. Just works!** 📊
+
+**Branded and professional - ready to share with your team!**
+
+
+---
+
+## 🎯 What This Is
+
+A single-file dashboard that:
+- ✅ **Upload Excel/CSV files** (drag & drop!)
+- ✅ **40% margin goal tracking** (green = good, orange = needs work)
+- ✅ **Employee performance cards** (instant evaluation)
+- ✅ **Filter by agent, month, status**
+- ✅ **Export to CSV**
+- ✅ **Print reports**
+- ✅ **Works 100% offline** (no internet needed!)
+
+**No Google Sheets. No Zapier. No API. Just upload and analyze!**
+
+---
+
+## 🚀 Quick Start (30 Seconds)
+
+1. **Extract the zip**
+2. **Double-click `index.html`**
+3. **Drag your commission Excel file onto the page**
+4. **Done!** See instant analysis
+
+---
+
+## 📦 What's Included
+
+- **`index.html`** - The complete dashboard (just open this!)
+- **`SAMPLE_DATA.xlsx`** - Your actual data to test with
+- **`README.md`** - This file
+
+---
+
+## ✨ Features
+
+### 40% Margin Goal
+Each employee card shows:
+- ✅ **Green** if at/above 40% margin
+- ⚠️ **Orange** if below 40% margin
+- **vs Goal** number (+2.3% or -5.4%)
+
+### Employee Performance Cards
+```
+┌─────────────────────────────────┐
+│ Julia Matheos                    │
+├─────────────────────────────────┤
+│ 34 shipments                    │
+│ $17,871 revenue                 │
+│ Avg Margin ⚠️: 34.6% (orange)   │
+│ vs Goal (40%): -5.4%            │
+│ Commission: $309.14             │
+└─────────────────────────────────┘
 ```
 
-**Time: 30 seconds (semi-automatic)**
+### Filters
+- By Agent (Julia, Nicole, etc.)
+- By Month (Feb 2026, Jan 2026, All Time)
+- By Agent Type (Sales, Operations)
+- By Status (Pending, Paid)
 
-### For Your Team (View Only):
+### Export & Print
+- CSV export for accounting
+- Print individual employee reports
+- Mobile-friendly
 
+---
+
+## 💡 How to Use
+
+### Weekly Routine:
+
+1. **Get commission report from Logistically**
+   - Reports → Commission → Export
+
+2. **Open dashboard**
+   - Double-click `index.html`
+
+3. **Upload file**
+   - Drag Excel file onto dashboard
+   - Or click upload zone
+
+4. **Evaluate employees**
+   - Filter by each agent
+   - See their performance card
+   - Check if meeting 40% goal
+
+5. **Print reports**
+   - Filter by agent
+   - Click Print button
+   - Save as PDF
+
+---
+
+## 🎯 Employee Evaluation
+
+### Julia at 34.6% (Below Goal):
 ```
-1. Visit dashboard URL
-2. See latest data
-3. Done!
+Avg Margin ⚠️: 34.6% (orange)
+vs Goal (40%): -5.4%
 ```
+**Action:** Coach on negotiating better rates
 
-**Time: 5 seconds (just viewing)**
-
----
-
-## 📊 What You Get
-
-### Google Drive:
+### Nicole at 42% (Meeting Goal):
 ```
-📁 Commission Reports/
-  └── 2026-02-25_14-30-22_Commission_Report.xlsx
-  └── 2026-02-18_15-45-00_Commission_Report.xlsx
-  └── 2026-02-11_13-22-10_Commission_Report.xlsx
+Avg Margin ✅: 42.0% (green)
+vs Goal (40%): +2.0%
 ```
-**Every report saved automatically with timestamp**
-
-### Google Sheets:
-```
-Tab 1: All Data
-├── Every commission record
-├── Import date tracking
-├── Month extraction
-└── Complete history
-
-Tab 2: Monthly Summary  
-├── Totals per month
-├── Revenue, Cost, Profit, Commission
-└── Auto-calculated
-
-Tab 3: Agent Summary
-├── Performance by agent & month
-├── Julia vs Nicole comparisons
-└── Trend tracking
-```
-
-### Dashboard:
-```
-📊 Beautiful Web Interface
-├── Month selector (Feb 2026, Jan 2026, All Time)
-├── Agent filters (Julia, Nicole, All)
-├── Type filters (Sales, Operations)
-├── Status filters (Pending, Paid)
-├── Export to CSV
-├── Print reports
-└── Mobile-friendly
-```
+**Action:** Celebrate and recognize!
 
 ---
 
-## ✨ Key Features
+## 📱 Works Everywhere
 
-### Zapier Automation:
-- ✅ Detects emails instantly
-- ✅ Saves to organized folders
-- ✅ Never miss a report
-- ✅ Runs 24/7 automatically
-
-### Google Sheets Organization:
-- ✅ Auto-calculating summaries
-- ✅ Month-over-month comparisons
-- ✅ Agent performance tracking
-- ✅ Historical data forever
-
-### Dashboard Visualizations:
-- ✅ Beautiful design
-- ✅ Real-time data from Sheets
-- ✅ Month selector
-- ✅ Agent filters
-- ✅ Export & print
-- ✅ Mobile-friendly
+- ✅ Desktop (Windows/Mac/Linux)
+- ✅ Phone (iPhone/Android)
+- ✅ Tablet (iPad)
+- ✅ Any browser
+- ✅ **100% offline** (no internet needed!)
 
 ---
 
-## 🎯 Use Cases
+## 🔧 Configuration
 
-### Weekly Payroll:
-1. Check Dashboard or Google Sheet
-2. Filter by "Pending" status
-3. See what you owe each agent
-4. Process payments
+Want to change the goal from 40%?
 
-### Monthly Reports:
-1. Select month in dashboard
-2. View total commission
-3. Export to CSV
-4. Send to accounting
-
-### Agent Performance Reviews:
-1. Filter by specific agent
-2. See their complete history
-3. Compare months
-4. Discuss performance
-
-### Team Sharing:
-1. Share dashboard URL with team
-2. Everyone sees same data
-3. No need to email reports
-4. Always up-to-date
+1. Open `index.html` in text editor
+2. Find: `const GOAL_MARGIN = 40;`
+3. Change to: `const GOAL_MARGIN = 35;` (or any %)
+4. Save and refresh
 
 ---
 
-## 📱 Access Anywhere
+## 💾 Your Data is Safe
 
-### Desktop:
-- Windows ✅
-- Mac ✅
-- Linux ✅
-- Any browser
-
-### Mobile:
-- iPhone ✅
-- Android ✅
-- Tablet ✅
-- Google Sheets app ✅
-
-### Work:
-- Office computer ✅
-- Home computer ✅
-- Coffee shop ✅
-- Anywhere with internet ✅
+- ✅ Everything happens in your browser
+- ✅ Nothing uploaded to any server
+- ✅ No internet connection needed
+- ✅ 100% private and secure
 
 ---
 
-## 🔐 Security & Privacy
+## 📊 Version
 
-### Your Data:
-- ✅ Lives in YOUR Google account
-- ✅ Encrypted by Google
-- ✅ Only YOU control access
-- ✅ No third parties (except Zapier connection)
+**v1.0.1** - File Upload Version
 
-### Zapier Access:
-- ✅ Only reads commission emails
-- ✅ Only saves to your Drive
-- ✅ Can revoke access anytime
-- ✅ Industry-standard security
-
-### Dashboard Sharing:
-- ✅ View-only (nobody can edit)
-- ✅ You control who gets URL
-- ✅ Can make Google Sheet private again anytime
-- ✅ Completely safe
+**Features:**
+- Upload Excel/CSV files
+- 40% margin goal tracking
+- Orange for below goal (constructive feedback)
+- Green for meeting goal (celebration)
+- Version number in footer
 
 ---
 
-## ⚡ Setup Order
+## 🎉 That's It!
 
-**Do these in order for best results:**
+Double-click `index.html` and start analyzing!
 
-### Step 1: Zapier (Start Here)
-File: `ZAPIER_SETUP.md`
-- Create Zap
-- Connect Gmail & Drive
-- Test automation
-**Time: 5 minutes**
-
-### Step 2: Google Sheets
-File: `GOOGLE_SHEETS_SETUP.md`
-- Create sheet
-- Add formulas
-- Test summaries
-**Time: 10 minutes**
-
-### Step 3: Dashboard
-File: `DASHBOARD_CONNECTION.md`
-- Get Sheet ID
-- Update config
-- Connect dashboard
-**Time: 10 minutes**
-
-### Step 4: Deploy (Optional)
-File: See Zapier docs for GitHub Pages
-- Upload to GitHub
-- Enable Pages
-- Share URL with team
-**Time: 5 minutes**
-
----
-
-## ✅ Complete Setup Checklist
-
-### Zapier:
-- [ ] Created Zapier account
-- [ ] Created Zap (Gmail → Drive)
-- [ ] Connected Gmail account
-- [ ] Connected Google Drive
-- [ ] Selected "Commission Reports" folder
-- [ ] Tested with email
-- [ ] Turned Zap ON
-- [ ] Verified file saved to Drive
-
-### Google Sheets:
-- [ ] Created "Middle Sis Commission Master"
-- [ ] Created 3 tabs (All Data, Monthly, Agent)
-- [ ] Added headers to All Data tab
-- [ ] Added Import Date formula (column A)
-- [ ] Added Month formula (column B)
-- [ ] Created Monthly Summary formulas
-- [ ] Created Agent Summary (pivot or query)
-- [ ] Tested with sample data
-- [ ] Bookmarked Sheet URL
-
-### Dashboard:
-- [ ] Made Google Sheet public (Anyone with link)
-- [ ] Copied Sheet ID correctly
-- [ ] Updated GOOGLE_SHEET_ID in index.html
-- [ ] Saved index.html file
-- [ ] Opened dashboard in browser
-- [ ] Sees "Connected to Google Sheets" message
-- [ ] Stats display correctly
-- [ ] Month selector works
-- [ ] Can filter by agent
-- [ ] Refresh button works
-- [ ] Bookmarked dashboard URL
-
-### Optional:
-- [ ] Deployed to GitHub Pages
-- [ ] Shared dashboard URL with team
-- [ ] Added to phone home screen
-- [ ] Set up bookmarks for quick access
-
----
-
-## 💡 Pro Tips
-
-### Tip 1: Weekly Routine
-Every Monday morning:
-1. Open Google Drive folder (10 sec)
-2. Open latest file (5 sec)
-3. Copy & paste to Sheets (15 sec)
-4. Done! Dashboard auto-updates
-
-### Tip 2: Mobile Quick Access
-Add dashboard to phone home screen:
-- iPhone: Safari → Share → Add to Home Screen
-- Android: Chrome → Menu → Add to Home Screen
-
-### Tip 3: Team Training
-Show team:
-1. How to access dashboard URL
-2. How to use month selector
-3. How to filter by agent
-4. How to export reports
-
-### Tip 4: Backup Strategy
-Google automatically backs up everything, but you can also:
-- Download Sheets as Excel monthly
-- Keep Drive files organized
-- Export CSV from dashboard regularly
-
-### Tip 5: Performance Tracking
-Use monthly summaries to:
-- Track revenue trends
-- Compare agent performance
-- Identify top performers
-- Set commission goals
-
----
-
-## 🆘 Troubleshooting
-
-### Zapier Issues:
-**See:** `ZAPIER_SETUP.md` - Troubleshooting section
-
-### Google Sheets Issues:
-**See:** `GOOGLE_SHEETS_SETUP.md` - Common problems
-
-### Dashboard Issues:
-**See:** `DASHBOARD_CONNECTION.md` - Troubleshooting guide
-
-### Common Quick Fixes:
-1. **Nothing working?** → Check Zap is turned ON
-2. **Dashboard not loading?** → Check Sheet ID is correct
-3. **Old data showing?** → Click Refresh button
-4. **Can't find file?** → Check Google Drive folder name
-
----
-
-## 📞 Quick Reference
-
-### Important URLs:
-- **Zapier Dashboard:** https://zapier.com/app/zaps
-- **Your Google Sheet:** [Bookmark after setup]
-- **Your Dashboard:** [Bookmark after setup]
-- **Google Drive Folder:** Commission Reports/
-
-### Key Times:
-- **Zapier check:** Instant (triggered by email)
-- **Manual paste:** 30 seconds/week
-- **Dashboard refresh:** Click button anytime
-
-### Support Docs:
-- **Zapier Setup:** `ZAPIER_SETUP.md`
-- **Sheets Setup:** `GOOGLE_SHEETS_SETUP.md`
-- **Dashboard Connection:** `DASHBOARD_CONNECTION.md`
-
----
-
-## 🎉 What You've Built
-
-A professional, automated commission tracking system that:
-
-✅ **Saves time** - 30 seconds/week vs 5+ minutes
-✅ **Never loses data** - Everything saved automatically
-✅ **Looks professional** - Beautiful dashboard
-✅ **Scales easily** - Handle hundreds of shipments
-✅ **Accessible anywhere** - Phone, tablet, desktop
-✅ **Shareable** - Team can view anytime
-✅ **Cost-effective** - Completely free!
-
----
-
-## 🚀 Ready to Start?
-
-**Step 1:** Open `ZAPIER_SETUP.md` and follow the guide
-
-**Step 2:** Set up Google Sheets with `GOOGLE_SHEETS_SETUP.md`
-
-**Step 3:** Connect dashboard with `DASHBOARD_CONNECTION.md`
-
-**Total time: 25 minutes**  
-**Total cost: $0**  
-**Result: Fully automated commission tracking!**
-
----
-
-**Questions?** Each guide has detailed troubleshooting!
-
-**Enjoy your automated system!** 🎊
+**No setup. No configuration. Just works!** 📊
