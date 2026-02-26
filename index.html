@@ -760,7 +760,7 @@
     </div>
 
     <footer>
-        Middle Sis Inc. Commission Dashboard v1.2.0 | Complete Edition | Feb 2026
+        Middle Sis Inc. Commission Dashboard v1.2.1 | Complete Edition | Feb 2026
     </footer>
 
     <script>
@@ -822,15 +822,29 @@
             reader.onload = function(e) {
                 try {
                     const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array', cellDates: true });
+                    const workbook = XLSX.read(data, { 
+                        type: 'array',
+                        cellDates: true,
+                        cellNF: false,
+                        cellText: false
+                    });
                     const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                    rawData = XLSX.utils.sheet_to_json(firstSheet, { raw: false, dateNF: 'mm/dd/yyyy' });
+                    
+                    // Get data as JSON keeping numbers as numbers
+                    rawData = XLSX.utils.sheet_to_json(firstSheet, { 
+                        raw: false,
+                        defval: ''
+                    });
+                    
+                    console.log('Raw data loaded:', rawData.length, 'rows');
+                    console.log('Sample raw row:', rawData[0]);
                     
                     processData();
                     saveData();
                     displayAll();
                     document.getElementById('uploadZone').style.display = 'none';
                 } catch (error) {
+                    console.error('Error details:', error);
                     alert('Error reading file: ' + error.message);
                 }
             };
@@ -848,19 +862,34 @@
                            orderNum.length >= 5;
                 })
                 .map(row => {
-                    const revenue = parseFloat(row['Customer Total Cost from Order'] || 0);
-                    const cost = parseFloat(row['Carrier Cost from Order'] || 0);
-                    const profit = parseFloat(row['Gross Profit'] || (revenue - cost));
+                    // Helper function to parse numbers safely
+                    const parseNum = (val) => {
+                        if (val === null || val === undefined || val === '') return 0;
+                        // Remove $ and commas, then parse
+                        const cleaned = String(val).replace(/[$,]/g, '');
+                        const num = parseFloat(cleaned);
+                        return isNaN(num) ? 0 : num;
+                    };
+                    
+                    const revenue = parseNum(row['Customer Total Cost from Order']);
+                    const cost = parseNum(row['Carrier Cost from Order']);
+                    const profit = parseNum(row['Gross Profit']) || (revenue - cost);
                     const margin = revenue > 0 ? (profit / revenue) * 100 : 0;
-                    const commission = parseFloat(row['Sales Commission'] || 0);
+                    const commission = parseNum(row['Sales Commission']);
                     
                     // Parse date properly
                     let shipDate = row['Shipment Date'] || '';
                     if (shipDate) {
-                        // Try to parse as date
-                        const dateObj = new Date(shipDate);
-                        if (!isNaN(dateObj.getTime())) {
-                            shipDate = (dateObj.getMonth() + 1) + '/' + dateObj.getDate() + '/' + dateObj.getFullYear();
+                        try {
+                            const dateObj = new Date(shipDate);
+                            if (!isNaN(dateObj.getTime())) {
+                                const month = dateObj.getMonth() + 1;
+                                const day = dateObj.getDate();
+                                const year = dateObj.getFullYear();
+                                shipDate = month + '/' + day + '/' + year;
+                            }
+                        } catch (e) {
+                            // Keep original if parsing fails
                         }
                     }
                     
@@ -874,8 +903,8 @@
                         date: shipDate,
                         cost,
                         revenue,
-                        salesTax: parseFloat(row['Sales Tax'] || 0),
-                        salesTax2: parseFloat(row['Sales Tax 2'] || 0),
+                        salesTax: parseNum(row['Sales Tax']),
+                        salesTax2: parseNum(row['Sales Tax 2']),
                         agentType: row['Agent Type'] || 'Sales',
                         salesRep: row['Agent Full Name'] || '',
                         profit,
@@ -883,6 +912,9 @@
                         margin
                     };
                 });
+                
+            console.log('Processed', processedData.length, 'records');
+            console.log('Sample data:', processedData[0]);
         }
         
         function loadSavedData() {
