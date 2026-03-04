@@ -675,7 +675,7 @@
             <div class="stat-card commission">
                 <div class="stat-label">Total Commission</div>
                 <div class="stat-value" id="statCommission">$0</div>
-                <div class="stat-sub">Owed to agents</div>
+                <div class="stat-sub" id="statCommissionPercent">0% of profit</div>
             </div>
         </div>
 
@@ -747,7 +747,7 @@
     </div>
 
     <footer>
-        Middle Sis Inc. Commission Dashboard v1.3.1 | Final Polish | Feb 2026
+        Middle Sis Inc. Commission Dashboard v1.5.0 | Auto-Calculate Commission | Feb 2026
     </footer>
 
     <script>
@@ -758,6 +758,14 @@
         
         const GOAL_MARGIN = 40;
         const STORAGE_KEY = 'middleSisCommissionData';
+        
+        // Commission rates per agent (% of gross profit)
+        const COMMISSION_RATES = {
+            'Julia Matheos': 5.0,
+            'Nicole Caporusso': 5.0,
+            'Tom': 15.0,
+            'Austin': 10.0
+        };
         
         // Load saved data on page load
         document.addEventListener('DOMContentLoaded', () => {
@@ -862,7 +870,10 @@
                     const cost = parseNum(row['Carrier Cost from Order']);
                     const profit = parseNum(row['Gross Profit']) || (revenue - cost);
                     const margin = revenue > 0 ? (profit / revenue) * 100 : 0;
-                    const commission = parseNum(row['Sales Commission']);
+                    
+                    const agentName = row['Agent Full Name'] || '';
+                    const commissionRate = COMMISSION_RATES[agentName] || 0;
+                    const commission = profit * (commissionRate / 100); // Calculate commission from profit
                     
                     // Parse date properly
                     let shipDate = row['Shipment Date'] || '';
@@ -893,9 +904,10 @@
                         salesTax: parseNum(row['Sales Tax']),
                         salesTax2: parseNum(row['Sales Tax 2']),
                         agentType: row['Agent Type'] || 'Sales',
-                        salesRep: row['Agent Full Name'] || '',
+                        salesRep: agentName,
                         profit,
                         commission,
+                        commissionRate,
                         margin
                     };
                 });
@@ -966,6 +978,9 @@
             const totalProfit = processedData.reduce((sum, row) => sum + row.profit, 0);
             const totalCommission = processedData.reduce((sum, row) => sum + row.commission, 0);
             const avgMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
+            
+            // Calculate commission percentage
+            const commissionPercent = totalProfit > 0 ? (totalCommission / totalProfit) * 100 : 0;
 
             document.getElementById('statRevenue').textContent = formatMoney(totalRevenue);
             document.getElementById('statCost').textContent = formatMoney(totalCost);
@@ -973,6 +988,7 @@
             document.getElementById('statCommission').textContent = formatMoney(totalCommission);
             document.getElementById('statMargin').textContent = avgMargin.toFixed(1) + '% margin';
             document.getElementById('statCount').textContent = processedData.length + ' shipments';
+            document.getElementById('statCommissionPercent').textContent = commissionPercent.toFixed(1) + '% of profit';
         }
         
         function updateRepSummary() {
@@ -981,7 +997,7 @@
             processedData.forEach(row => {
                 const rep = row.salesRep;
                 if (!byRep[rep]) {
-                    byRep[rep] = { count: 0, revenue: 0, cost: 0, profit: 0, commission: 0 };
+                    byRep[rep] = { count: 0, revenue: 0, cost: 0, profit: 0, commission: 0, rate: row.commissionRate };
                 }
                 byRep[rep].count++;
                 byRep[rep].revenue += row.revenue;
@@ -995,6 +1011,8 @@
                 .map(([rep, data]) => {
                     const margin = data.revenue > 0 ? (data.profit / data.revenue) * 100 : 0;
                     const avgCommPerShipment = data.count > 0 ? data.commission / data.count : 0;
+                    const commissionRate = data.rate || 0;
+                    
                     const marginVsGoal = margin - GOAL_MARGIN;
                     const marginStatus = margin >= GOAL_MARGIN ? '✅' : '⚠️';
                     const marginColor = margin >= GOAL_MARGIN ? 'var(--color-green)' : 'var(--color-orange)';
@@ -1026,8 +1044,8 @@
                                     </span>
                                 </div>
                                 <div class="rep-stat-item">
-                                    <span class="rep-stat-label">Avg/Shipment</span>
-                                    <span class="rep-stat-value">${formatMoney(avgCommPerShipment)}</span>
+                                    <span class="rep-stat-label">Comm Rate</span>
+                                    <span class="rep-stat-value">${commissionRate.toFixed(1)}% of profit</span>
                                 </div>
                                 <div class="rep-stat-item full-width">
                                     <span class="rep-stat-label">Total Commission</span>

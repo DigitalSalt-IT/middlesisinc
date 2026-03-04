@@ -1,76 +1,123 @@
-# 📊 Middle Sis Commission Dashboard v1.3.1
+# 📊 Middle Sis Commission Dashboard v1.5.0
 
-**Final Polish - Perfect Header!** ✨
+**Commission Auto-Calculation!** 💰
 
 ---
 
-## 🎨 v1.3.1 Updates
+## 🎯 v1.5.0 - MAJOR UPDATE
 
-### Header Changes:
-- ✅ **Transparent logo** (looks great on any background!)
-- ✅ **30% larger** (520px width - much more prominent)
-- ✅ **Address removed** (cleaner look)
-- ✅ **"Commission Dashboard" centered** (simple & clear)
+### Dashboard Now CALCULATES Commission!
 
-### Result:
+**Commission Rates Set:**
+- Julia Matheos: 5% of profit
+- Nicole Caporusso: 5% of profit
+- Tom: 15% of profit
+- Austin: 10% of profit
+
+**How It Works:**
+The dashboard reads the Gross Profit column and automatically calculates commission for each person based on their rate.
+
+**Example:**
 ```
-        [LARGE BEAUTIFUL LOGO]
-         Commission Dashboard
+Shipment profit: $1,000
+Julia's rate: 5%
+Julia's commission: $50 (calculated automatically!)
 ```
-Clean, professional, focused!
 
 ---
 
-## ✅ Everything Still Perfect
+## 💡 Why This Matters
 
-- ✅ Numbers calculate correctly
-- ✅ Dates display properly  
-- ✅ Data persists (localStorage)
-- ✅ Performance reviews work
-- ✅ 40% goal tracking
-- ✅ Click cards for details
-- ✅ Export CSV (dark blue button)
-- ✅ Print function
-- ✅ Clear data option
+**No more manual calculations!**
+- Upload file from Logistically
+- Dashboard calculates all commissions
+- See total owed to each person
+- Export for payroll
+
+**Even if the "Sales Commission" column is empty in the Excel file, the dashboard calculates it for you!**
 
 ---
 
-## 🚀 Quick Start
+## 📊 What You'll See
 
-1. **Double-click `index.html`**
-2. **Upload commission Excel file**
-3. **Everything works!**
+**Employee Cards:**
+```
+Julia Matheos
+Profit: $6,182.90
+Comm Rate: 5.0% of profit
+Total Commission: $309.15 ← Auto-calculated!
+```
+
+**Total Commission Card:**
+```
+Total Commission
+$725.15 ← Sum of all calculated commissions
+5.0% of profit ← Overall average
+```
 
 ---
 
-## 🎯 What You Get
+## 🔧 To Update Commission Rates
 
-**Clean Header:**
-- Large, prominent logo
-- Simple "Commission Dashboard" title
-- No clutter, just branding
+If someone's rate changes:
 
-**Full Features:**
-- Employee performance reviews
+1. Open `index.html` in text editor
+2. Find (around line 730):
+```javascript
+const COMMISSION_RATES = {
+    'Julia Matheos': 5.0,
+    'Nicole Caporusso': 5.0,
+    'Tom': 15.0,
+    'Austin': 10.0
+};
+```
+3. Change the percentage
+4. Save and refresh
+5. All commissions recalculate automatically!
+
+---
+
+## 📈 The Math
+
+**For each shipment:**
+```
+Commission = Gross Profit × (Rate / 100)
+```
+
+**For Julia at 5%:**
+- Shipment 1: $85 profit × 5% = $4.25
+- Shipment 2: $174 profit × 5% = $8.70
+- Shipment 3: $118 profit × 5% = $5.90
+- Total: $309.15
+
+**Dashboard does this for every shipment automatically!**
+
+---
+
+## ✅ Complete Features
+
+- **Auto-calculate commission** (NEW!)
+- Shows commission rate on cards (NEW!)
+- Commission based on profit % (NEW!)
+- Data persistence
+- Performance reviews
+- 40% margin goal tracking
 - Month-by-month analysis
-- Top/worst shipments
-- AI insights
-- Goal tracking
-
-**Professional:**
-- Your transparent logo
-- Middle Sis blue colors
-- Clean design
-- Ready to share
+- Export to CSV with calculated commissions
+- All calculations correct
 
 ---
 
-## 🎉 This Is It!
+## 🚀 Workflow
 
-**v1.3.1 - The final version with:**
-- Perfect logo size ✅
-- Clean header ✅
-- All features working ✅
-- Ready for your team ✅
+1. **Export from Logistically**
+2. **Upload to dashboard**
+3. **Commissions calculated automatically**
+4. **Click employee cards to review**
+5. **Export CSV for payroll**
 
-**Looks amazing!** 🚛💼✨
+Done in 2 minutes!
+
+---
+
+**v1.5.0 - No more commission calculation errors!** 💰✨
