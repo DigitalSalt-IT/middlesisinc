@@ -747,7 +747,7 @@
     </div>
 
     <footer>
-        Middle Sis Inc. Commission Dashboard v1.5.0 | Auto-Calculate Commission | Feb 2026
+        Middle Sis Inc. Commission Dashboard v2.0.1 | Secure Access | Feb 2026
     </footer>
 
     <script>
@@ -767,7 +767,66 @@
             'Austin': 10.0
         };
         
-        // Load saved data on page load
+        // ALLOWED EMAIL ADDRESSES - Only these users can access the dashboard
+        const ALLOWED_EMAILS = [
+            'austin@middlesisinc.com',
+            'admin@middlesisinc.com',
+            'josh@digitalsalt.co'
+        ];
+        
+                // Authentication check
+        window.addEventListener('DOMContentLoaded', () => {
+            const token = sessionStorage.getItem('ms_token');
+            const userEmail = sessionStorage.getItem('ms_email');
+            
+            if (!token || !userEmail) {
+                // Not logged in, redirect to login page
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // EMAIL WHITELIST CHECK - Only allowed emails can access
+            if (!ALLOWED_EMAILS.includes(userEmail.toLowerCase())) {
+                alert('🔒 Access Denied\n\nYour email (' + userEmail + ') is not authorized to access this dashboard.\n\nAuthorized users:\n• austin@middlesisinc.com\n• admin@middlesisinc.com\n• josh@digitalsalt.co\n\nPlease contact your administrator if you need access.');
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Show user info
+            showUserInfo();
+            
+            // Continue with normal loading
+            loadSavedData();
+            setupFileInput();
+            setupDragDrop();
+        });
+        
+        function showUserInfo() {
+            const userName = sessionStorage.getItem('ms_name');
+            const userEmail = sessionStorage.getItem('ms_email');
+            
+            // Add user info and logout button to header
+            const header = document.querySelector('.header');
+            if (header) {
+                const userInfo = document.createElement('div');
+                userInfo.style.cssText = 'margin-top: 16px; font-size: 14px; color: var(--color-grey);';
+                userInfo.innerHTML = `
+                    <span>👤 ${userName || userEmail}</span>
+                    <button onclick="logout()" style="margin-left: 16px; padding: 6px 16px; background: var(--color-red); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">
+                        Logout
+                    </button>
+                `;
+                header.appendChild(userInfo);
+            }
+        }
+        
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'login.html';
+        }
+        
+// Load saved data on page load
         document.addEventListener('DOMContentLoaded', () => {
             loadSavedData();
             setupFileInput();

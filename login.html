@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Middle Sis Commission Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #F5F6F7 0%, #E8EAEC 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            max-width: 500px;
+            width: 100%;
+            padding: 48px 40px;
+            text-align: center;
+        }
+
+        .logo {
+            max-width: 350px;
+            height: auto;
+            margin-bottom: 32px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #4A7B9D;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #7D8A93;
+            font-size: 16px;
+            margin-bottom: 40px;
+        }
+
+        .ms-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: white;
+            border: 2px solid #8C8C8C;
+            color: #5E5E5E;
+            padding: 14px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .ms-button:hover {
+            background: #F3F2F1;
+            border-color: #8C8C8C;
+        }
+
+        .ms-button:active {
+            background: #EDEBE9;
+        }
+
+        .ms-logo {
+            width: 21px;
+            height: 21px;
+        }
+
+        .info-box {
+            margin-top: 32px;
+            padding: 20px;
+            background: #F5F8FA;
+            border-radius: 8px;
+            border-left: 4px solid #6BA3C8;
+        }
+
+        .info-box h3 {
+            font-size: 14px;
+            color: #4A7B9D;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .info-box p {
+            font-size: 14px;
+            color: #7D8A93;
+            line-height: 1.6;
+        }
+
+        .footer {
+            margin-top: 32px;
+            font-size: 12px;
+            color: #7D8A93;
+        }
+
+        .loading {
+            display: none;
+            margin-top: 20px;
+            color: #6BA3C8;
+            font-size: 14px;
+        }
+
+        .error {
+            display: none;
+            margin-top: 20px;
+            padding: 16px;
+            background: #FFF4F4;
+            border: 1px solid #FFB4B4;
+            border-radius: 8px;
+            color: #C82333;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <img src="data:image/png;base64,YOUR_LOGO_HERE" alt="Middle Sis Inc." class="logo" id="logo">
+        
+        <h1>Commission Dashboard</h1>
+        <p class="subtitle">Sign in with your Microsoft account to continue</p>
+
+        <button class="ms-button" onclick="loginWithMicrosoft()">
+            <svg class="ms-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 21">
+                <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+                <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+                <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+                <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+            </svg>
+            Sign in with Microsoft
+        </button>
+
+        <div class="loading" id="loading">
+            Signing in...
+        </div>
+
+        <div class="error" id="error">
+            Login failed. Please try again.
+        </div>
+
+        <div class="info-box">
+            <h3>🔒 Secure Access</h3>
+            <p>Only authorized Middle Sis Inc. accounts can access this dashboard. Your Microsoft credentials are never stored on our servers.</p>
+        </div>
+
+        <div class="footer">
+            Middle Sis Inc. Commission Dashboard v1.5.0 | Secure Login
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURATION - You need to set these up in Azure AD
+        const CONFIG = {
+            clientId: 'YOUR_CLIENT_ID_HERE',  // From Azure AD App Registration
+            redirectUri: window.location.origin + window.location.pathname.replace('login.html', 'index.html'),
+            authority: 'https://login.microsoftonline.com/common',
+            scopes: ['user.read']
+        };
+
+        // Check if user is already logged in
+        window.addEventListener('DOMContentLoaded', () => {
+            const token = sessionStorage.getItem('ms_token');
+            const userEmail = sessionStorage.getItem('ms_email');
+            
+            if (token && userEmail) {
+                // Already logged in, redirect to dashboard
+                window.location.href = 'index.html';
+            }
+
+            // Load logo from the other file
+            loadLogo();
+        });
+
+        function loadLogo() {
+            // This will be replaced with actual logo data
+            fetch('logo_new.txt')
+                .then(r => r.text())
+                .then(logoData => {
+                    document.getElementById('logo').src = logoData;
+                })
+                .catch(() => {
+                    // Logo failed to load, that's okay
+                });
+        }
+
+        function loginWithMicrosoft() {
+            // Check if client ID is configured
+            if (CONFIG.clientId === 'YOUR_CLIENT_ID_HERE') {
+                alert('Microsoft login not configured yet. Please follow the setup instructions in SETUP_MICROSOFT_LOGIN.md');
+                return;
+            }
+
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+
+            // Microsoft OAuth 2.0 login flow
+            const authUrl = `${CONFIG.authority}/oauth2/v2.0/authorize?` +
+                `client_id=${CONFIG.clientId}` +
+                `&response_type=token` +
+                `&redirect_uri=${encodeURIComponent(CONFIG.redirectUri)}` +
+                `&scope=${encodeURIComponent(CONFIG.scopes.join(' '))}` +
+                `&response_mode=fragment`;
+
+            // Redirect to Microsoft login
+            window.location.href = authUrl;
+        }
+
+        // Handle the redirect back from Microsoft
+        function handleRedirectCallback() {
+            const hash = window.location.hash.substring(1);
+            const params = new URLSearchParams(hash);
+            
+            const accessToken = params.get('access_token');
+            const error = params.get('error');
+
+            if (error) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error').textContent = 'Login failed: ' + error;
+                return;
+            }
+
+            if (accessToken) {
+                // Get user info
+                fetch('https://graph.microsoft.com/v1.0/me', {
+                    headers: {
+                        'Authorization': 'Bearer ' + accessToken
+                    }
+                })
+                .then(r => r.json())
+                .then(user => {
+                    // Store session
+                    sessionStorage.setItem('ms_token', accessToken);
+                    sessionStorage.setItem('ms_email', user.mail || user.userPrincipalName);
+                    sessionStorage.setItem('ms_name', user.displayName);
+                    
+                    // Redirect to dashboard
+                    window.location.href = 'index.html';
+                })
+                .catch(err => {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('error').style.display = 'block';
+                });
+            }
+        }
+
+        // Check if we're returning from Microsoft login
+        if (window.location.hash) {
+            handleRedirectCallback();
+        }
+    </script>
+</body>
+</html>
