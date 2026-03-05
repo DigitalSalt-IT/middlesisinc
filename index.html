@@ -779,29 +779,54 @@
             const token = sessionStorage.getItem('ms_token');
             const userEmail = sessionStorage.getItem('ms_email');
             
-            // SHOW EMAIL FOR DEBUGGING
-            if (token && userEmail) {
-                alert('Logged in as: ' + userEmail + '\n\nThis should match one of:\n• austin@middlesisinc.com\n• admin@middlesisinc.com\n• josh@digitalsalt.co');
-            }
-            
             if (!token || !userEmail) {
                 // Not logged in, redirect to login page
                 window.location.href = 'login.html';
                 return;
             }
             
-            // EMAIL WHITELIST CHECK - Only allowed emails can access
+            // DEBUGGING - SHOW EMAIL AND STOP
             const normalizedEmail = userEmail.toLowerCase();
+            const isAllowed = ALLOWED_EMAILS.includes(normalizedEmail);
             
-            if (!ALLOWED_EMAILS.includes(normalizedEmail)) {
-                alert('🔒 Access Denied\n\nYour email (' + userEmail + ') is not authorized to access this dashboard.\n\nAuthorized users:\n• austin@middlesisinc.com\n• admin@middlesisinc.com\n• josh@digitalsalt.co\n\nPlease contact your administrator if you need access.');
-                sessionStorage.clear();
-                window.location.href = 'login.html';
-                return;
-            }
+            document.body.innerHTML = `
+                <div style="padding: 40px; font-family: Arial; max-width: 800px; margin: 0 auto;">
+                    <div style="background: #4A7B9D; color: white; padding: 10px 20px; border-radius: 5px; margin-bottom: 20px;">
+                        <h1 style="margin: 0;">🔍 Debug Information - v2.1.0-DEBUG</h1>
+                    </div>
+                    
+                    <h2>Your Email:</h2>
+                    <p style="font-size: 20px; background: #f0f0f0; padding: 10px; border-radius: 5px;">
+                        <strong>${userEmail}</strong>
+                    </p>
+                    
+                    <h2>Normalized Email (lowercase):</h2>
+                    <p style="font-size: 20px; background: #f0f0f0; padding: 10px; border-radius: 5px;">
+                        <strong>${normalizedEmail}</strong>
+                    </p>
+                    
+                    <h2>Is in whitelist?</h2>
+                    <p style="font-size: 24px; color: ${isAllowed ? 'green' : 'red'};">
+                        <strong>${isAllowed ? '✅ YES' : '❌ NO'}</strong>
+                    </p>
+                    
+                    <h2>Allowed Emails:</h2>
+                    <ul style="font-size: 18px;">
+                        ${ALLOWED_EMAILS.map(e => `<li>${e}</li>`).join('')}
+                    </ul>
+                    
+                    <h2>Character Comparison:</h2>
+                    <p>Your email characters: ${normalizedEmail.split('').map(c => c.charCodeAt(0)).join(', ')}</p>
+                    <p>First allowed email: ${ALLOWED_EMAILS[0].split('').map(c => c.charCodeAt(0)).join(', ')}</p>
+                    
+                    <button onclick="sessionStorage.clear(); window.location.href='login.html'" 
+                            style="margin-top: 20px; padding: 10px 20px; font-size: 16px; cursor: pointer; background: #4A7B9D; color: white; border: none; border-radius: 5px;">
+                        Go Back to Login
+                    </button>
+                </div>
+            `;
             
-            // Show user info
-            showUserInfo();
+            return; // STOP HERE - DON'T LOAD DASHBOARD
             
             // Continue with normal loading
             loadSavedData();
