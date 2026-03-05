@@ -164,9 +164,9 @@
     </div>
 
     <script>
-        // CONFIGURATION - You need to set these up in Azure AD
+        // CONFIGURATION - Azure AD App Registration
         const CONFIG = {
-            clientId: 'YOUR_CLIENT_ID_HERE',  // From Azure AD App Registration
+            clientId: '34f846f9-c32a-4499-ac4a-c7e06b445fb0',  // Your Azure AD Client ID
             redirectUri: window.location.origin + window.location.pathname.replace('login.html', 'index.html'),
             authority: 'https://login.microsoftonline.com/common',
             scopes: ['user.read']
