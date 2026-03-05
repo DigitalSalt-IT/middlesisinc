@@ -747,7 +747,7 @@
     </div>
 
     <footer>
-        Middle Sis Inc. Commission Dashboard v2.2.0 | Secure & Ready | Feb 2026
+        Middle Sis Inc. Commission Dashboard v2.2.1 | Working! | Feb 2026
     </footer>
 
     <script>
@@ -803,12 +803,6 @@
             setupFileInput();
             setupDragDrop();
         });
-            
-            // Continue with normal loading
-            loadSavedData();
-            setupFileInput();
-            setupDragDrop();
-        });
         
         function showUserInfo() {
             const userName = sessionStorage.getItem('ms_name');
@@ -848,19 +842,29 @@
         function setupDragDrop() {
             const zone = document.getElementById('uploadZone');
             
+            // Prevent browser from opening file
+            zone.addEventListener('dragenter', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+            
             zone.addEventListener('dragover', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 zone.style.borderColor = 'var(--color-dark-blue)';
                 zone.style.background = 'var(--color-cream)';
             });
             
-            zone.addEventListener('dragleave', () => {
+            zone.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 zone.style.borderColor = 'var(--color-primary-blue)';
                 zone.style.background = 'white';
             });
             
             zone.addEventListener('drop', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 zone.style.borderColor = 'var(--color-primary-blue)';
                 zone.style.background = 'white';
                 
@@ -868,6 +872,14 @@
                 if (files.length > 0) {
                     processFile(files[0]);
                 }
+            });
+            
+            // Also prevent at document level
+            document.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+            document.addEventListener('drop', (e) => {
+                e.preventDefault();
             });
         }
         
