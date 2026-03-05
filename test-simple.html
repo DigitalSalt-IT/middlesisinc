@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Test v2.1.1</title>
+</head>
+<body>
+    <h1>Debug Test v2.1.1</h1>
+    <div id="output"></div>
+    
+    <script>
+        const output = document.getElementById('output');
+        
+        output.innerHTML = '<h2>Script is running!</h2>';
+        
+        const token = sessionStorage.getItem('ms_token');
+        const email = sessionStorage.getItem('ms_email');
+        
+        output.innerHTML += `
+            <p><strong>Token exists:</strong> ${!!token}</p>
+            <p><strong>Email:</strong> ${email || 'NONE'}</p>
+            <p><strong>URL hash:</strong> ${window.location.hash}</p>
+        `;
+    </script>
+</body>
+</html>

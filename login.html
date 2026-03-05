@@ -159,7 +159,7 @@
         </div>
 
         <div class="footer">
-            Middle Sis Inc. Commission Dashboard v2.1.0-DEBUG | Secure Login
+            Middle Sis Inc. Commission Dashboard v2.1.1-FIXED | Secure Login
         </div>
     </div>
 
@@ -167,7 +167,7 @@
         // CONFIGURATION - Azure AD App Registration
         const CONFIG = {
             clientId: '34f846f9-c32a-4499-ac4a-c7e06b445fb0',  // Your Azure AD Client ID
-            redirectUri: window.location.origin + window.location.pathname.replace('login.html', 'index.html'),
+            redirectUri: window.location.origin + window.location.pathname,  // Stay on login.html
             authority: 'https://login.microsoftonline.com/bedb0f88-0c91-41c3-bd29-70d4e7737af7',  // Your Tenant ID
             scopes: ['user.read']
         };
