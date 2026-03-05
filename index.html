@@ -779,13 +779,12 @@
             const token = sessionStorage.getItem('ms_token');
             const userEmail = sessionStorage.getItem('ms_email');
             
-            console.log('DEBUG: Checking authentication...');
-            console.log('DEBUG: Token exists:', !!token);
-            console.log('DEBUG: User email:', userEmail);
-            console.log('DEBUG: Allowed emails:', ALLOWED_EMAILS);
+            // SHOW EMAIL FOR DEBUGGING
+            if (token && userEmail) {
+                alert('Logged in as: ' + userEmail + '\n\nThis should match one of:\n• austin@middlesisinc.com\n• admin@middlesisinc.com\n• josh@digitalsalt.co');
+            }
             
             if (!token || !userEmail) {
-                console.log('DEBUG: No token or email, redirecting to login');
                 // Not logged in, redirect to login page
                 window.location.href = 'login.html';
                 return;
@@ -793,18 +792,13 @@
             
             // EMAIL WHITELIST CHECK - Only allowed emails can access
             const normalizedEmail = userEmail.toLowerCase();
-            console.log('DEBUG: Normalized email:', normalizedEmail);
-            console.log('DEBUG: Is email in whitelist?', ALLOWED_EMAILS.includes(normalizedEmail));
             
             if (!ALLOWED_EMAILS.includes(normalizedEmail)) {
-                console.log('DEBUG: Email NOT in whitelist - access denied');
                 alert('🔒 Access Denied\n\nYour email (' + userEmail + ') is not authorized to access this dashboard.\n\nAuthorized users:\n• austin@middlesisinc.com\n• admin@middlesisinc.com\n• josh@digitalsalt.co\n\nPlease contact your administrator if you need access.');
                 sessionStorage.clear();
                 window.location.href = 'login.html';
                 return;
             }
-            
-            console.log('DEBUG: Access granted! Loading dashboard...');
             
             // Show user info
             showUserInfo();
