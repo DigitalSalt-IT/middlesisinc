@@ -791,6 +791,12 @@
             </div>
         </div>
 
+        <!-- Week-over-Week Trends -->
+        <div id="trendsSection" style="display: none; margin: 30px 0; background: white; border-radius: 12px; padding: 20px 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+            <h3 style="color: var(--color-dark-blue); margin-bottom: 20px; font-size: 18px;">📊 Week-over-Week Trends</h3>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;" id="trendsGrid"></div>
+        </div>
+
         <div class="controls" id="controls" style="display: none;">
             <div class="control-group">
                 <label class="control-label">Filter by Agent</label>
@@ -922,7 +928,7 @@
     </div>
 
     <footer>
-        Middle Sis Inc. Commission Dashboard v2.9.2 | Working! | Feb 2026
+        Middle Sis Inc. Commission Dashboard v2.10.0 | Working! | Feb 2026
     </footer>
 
     <script>
@@ -1280,6 +1286,87 @@
             document.getElementById('statMargin').textContent = avgMargin.toFixed(1) + '% margin';
             document.getElementById('statCount').textContent = currentMonthData.length + ' shipments this month';
             document.getElementById('statCommissionPercent').textContent = commissionPercent.toFixed(1) + '% of profit';
+            
+            // Update trends
+            updateWeeklyTrends();
+        }
+        
+        function updateWeeklyTrends() {
+            const now = new Date();
+            const currentWeekStart = new Date(now);
+            currentWeekStart.setDate(now.getDate() - now.getDay());
+            currentWeekStart.setHours(0, 0, 0, 0);
+            
+            const lastWeekStart = new Date(currentWeekStart);
+            lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+            
+            const lastWeekEnd = new Date(currentWeekStart);
+            lastWeekEnd.setDate(lastWeekEnd.getDate() - 1);
+            
+            // Get this week's data
+            const thisWeekData = processedData.filter(row => {
+                const date = new Date(row.date);
+                return date >= currentWeekStart;
+            });
+            
+            // Get last week's data
+            const lastWeekData = processedData.filter(row => {
+                const date = new Date(row.date);
+                return date >= lastWeekStart && date <= lastWeekEnd;
+            });
+            
+            const thisWeekRevenue = thisWeekData.reduce((sum, r) => sum + r.revenue, 0);
+            const lastWeekRevenue = lastWeekData.reduce((sum, r) => sum + r.revenue, 0);
+            
+            const thisWeekProfit = thisWeekData.reduce((sum, r) => sum + r.profit, 0);
+            const lastWeekProfit = lastWeekData.reduce((sum, r) => sum + r.profit, 0);
+            
+            const thisWeekCommission = thisWeekData.reduce((sum, r) => sum + r.commission, 0);
+            const lastWeekCommission = lastWeekData.reduce((sum, r) => sum + r.commission, 0);
+            
+            const revenueChange = lastWeekRevenue > 0 ? ((thisWeekRevenue - lastWeekRevenue) / lastWeekRevenue) * 100 : 0;
+            const profitChange = lastWeekProfit > 0 ? ((thisWeekProfit - lastWeekProfit) / lastWeekProfit) * 100 : 0;
+            const commissionChange = lastWeekCommission > 0 ? ((thisWeekCommission - lastWeekCommission) / lastWeekCommission) * 100 : 0;
+            
+            const getIndicator = (change) => {
+                if (change > 0) return { icon: '📈', color: 'var(--color-green)', text: 'up' };
+                if (change < 0) return { icon: '📉', color: 'var(--color-red)', text: 'down' };
+                return { icon: '➡️', color: 'var(--color-grey)', text: 'flat' };
+            };
+            
+            const revIndicator = getIndicator(revenueChange);
+            const profitIndicator = getIndicator(profitChange);
+            const commIndicator = getIndicator(commissionChange);
+            
+            const html = `
+                <div style="padding: 15px; background: var(--color-cream); border-radius: 8px;">
+                    <div style="font-size: 12px; color: var(--color-grey); margin-bottom: 8px;">Revenue</div>
+                    <div style="font-size: 24px; font-weight: 700; color: var(--color-dark-blue); margin-bottom: 8px;">${formatMoney(thisWeekRevenue)}</div>
+                    <div style="font-size: 14px; color: ${revIndicator.color}; font-weight: 600;">
+                        ${revIndicator.icon} ${Math.abs(revenueChange).toFixed(1)}% ${revIndicator.text}
+                    </div>
+                    <div style="font-size: 11px; color: var(--color-grey); margin-top: 4px;">vs last week: ${formatMoney(lastWeekRevenue)}</div>
+                </div>
+                <div style="padding: 15px; background: var(--color-cream); border-radius: 8px;">
+                    <div style="font-size: 12px; color: var(--color-grey); margin-bottom: 8px;">Profit</div>
+                    <div style="font-size: 24px; font-weight: 700; color: var(--color-dark-blue); margin-bottom: 8px;">${formatMoney(thisWeekProfit)}</div>
+                    <div style="font-size: 14px; color: ${profitIndicator.color}; font-weight: 600;">
+                        ${profitIndicator.icon} ${Math.abs(profitChange).toFixed(1)}% ${profitIndicator.text}
+                    </div>
+                    <div style="font-size: 11px; color: var(--color-grey); margin-top: 4px;">vs last week: ${formatMoney(lastWeekProfit)}</div>
+                </div>
+                <div style="padding: 15px; background: var(--color-cream); border-radius: 8px;">
+                    <div style="font-size: 12px; color: var(--color-grey); margin-bottom: 8px;">Commission</div>
+                    <div style="font-size: 24px; font-weight: 700; color: var(--color-dark-blue); margin-bottom: 8px;">${formatMoney(thisWeekCommission)}</div>
+                    <div style="font-size: 14px; color: ${commIndicator.color}; font-weight: 600;">
+                        ${commIndicator.icon} ${Math.abs(commissionChange).toFixed(1)}% ${commIndicator.text}
+                    </div>
+                    <div style="font-size: 11px; color: var(--color-grey); margin-top: 4px;">vs last week: ${formatMoney(lastWeekCommission)}</div>
+                </div>
+            `;
+            
+            document.getElementById('trendsGrid').innerHTML = html;
+            document.getElementById('trendsSection').style.display = 'block';
         }
         
         function updateRepSummary() {
@@ -1456,7 +1543,7 @@
                         </thead>
                         <tbody>
                             ${Object.entries(byMonth)
-                                .sort((a, b) => new Date(a[0]) - new Date(b[0]))
+                                .sort((a, b) => new Date(b[0]) - new Date(a[0]))
                                 .map(([month, data]) => {
                                     const monthMargin = data.revenue > 0 ? (data.profit / data.revenue) * 100 : 0;
                                     return `
