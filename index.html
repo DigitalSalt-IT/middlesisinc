@@ -864,6 +864,34 @@
             </div>
         </div>
 
+        <!-- Customer Analytics Section -->
+        <div class="analytics-section" id="customerSection" style="display: none;">
+            <div class="analytics-header">
+                <h2 class="analytics-title">👥 Customer Analysis - This Month</h2>
+                <p style="color: white; margin-top: 8px; font-size: 14px;">
+                    Top 5 Concentration: <span id="concentrationRisk" style="font-weight: 700;">0%</span> of revenue
+                </p>
+            </div>
+            <div class="analytics-content">
+                <div class="analytics-table-container">
+                    <table class="analytics-table">
+                        <thead>
+                            <tr>
+                                <th onclick="sortCustomerTable(0)" style="cursor: pointer;">Rank ⇅</th>
+                                <th onclick="sortCustomerTable(1)" style="cursor: pointer;">Customer ⇅</th>
+                                <th onclick="sortCustomerTable(2)" style="cursor: pointer;">Shipments ⇅</th>
+                                <th onclick="sortCustomerTable(3)" style="cursor: pointer;">Total Revenue ⇅</th>
+                                <th onclick="sortCustomerTable(4)" style="cursor: pointer;">Total Profit ⇅</th>
+                                <th onclick="sortCustomerTable(5)" style="cursor: pointer;">Avg Margin ⇅</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customerAnalyticsBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <div class="table-container" id="tableContainer" style="display: none;">
             <div class="table-header">
                 <div class="table-title">Commission Details</div>
@@ -887,13 +915,14 @@
     </div>
 
     <footer>
-        Middle Sis Inc. Commission Dashboard v2.5.0 | Working! | Feb 2026
+        Middle Sis Inc. Commission Dashboard v2.6.0 | Working! | Feb 2026
     </footer>
 
     <script>
         let rawData = [];
         let processedData = [];
         let carrierData = [];  // Store for sorting
+        let customerData = [];  // Store customer data for sorting
 
         // Get current month data
         function getCurrentMonthData() {
@@ -1211,6 +1240,7 @@
             updateStats();
             updateRepSummary();
             updateCarrierAnalytics();
+            updateCustomerAnalytics();
             renderTable(processedData);
             populateFilters();
             
@@ -1218,6 +1248,7 @@
             document.getElementById('controls').style.display = 'flex';
             document.getElementById('repSummary').style.display = 'block';
             document.getElementById('analyticsSection').style.display = 'block';
+            document.getElementById('customerSection').style.display = 'block';
             document.getElementById('tableContainer').style.display = 'block';
         }
         
@@ -1244,7 +1275,10 @@
         function updateRepSummary() {
             const byRep = {};
             
-            processedData.forEach(row => {
+            // Use current month data only
+            const currentMonthData = getCurrentMonthData();
+            
+            currentMonthData.forEach(row => {
                 const rep = row.salesRep;
                 if (!byRep[rep]) {
                     byRep[rep] = { count: 0, revenue: 0, cost: 0, profit: 0, commission: 0, rate: row.commissionRate };
@@ -1298,7 +1332,7 @@
                                     <span class="rep-stat-value">${commissionRate.toFixed(1)}% of profit</span>
                                 </div>
                                 <div class="rep-stat-item full-width">
-                                    <span class="rep-stat-label">Total Commission</span>
+                                    <span class="rep-stat-label">This Month's Commission</span>
                                     <span class="rep-stat-value highlight">${formatMoney(data.commission)}</span>
                                 </div>
                             </div>
@@ -1499,10 +1533,11 @@
         }
         
         function updateCarrierAnalytics() {
-            // Group by carrier
+            // Group by carrier - use current month data only
             const byCarrier = {};
+            const currentMonthData = getCurrentMonthData();
             
-            processedData.forEach(row => {
+            currentMonthData.forEach(row => {
                 const carrier = row.carrier || 'Unknown';
                 if (!byCarrier[carrier]) {
                     byCarrier[carrier] = { count: 0, revenue: 0, cost: 0, profit: 0 };
@@ -1584,6 +1619,94 @@
             }).join('');
             
             document.getElementById('carrierAnalyticsBody').innerHTML = html;
+        }
+        
+        // Customer Analytics
+        function updateCustomerAnalytics() {
+            const byCustomer = {};
+            const currentMonthData = getCurrentMonthData();
+            
+            currentMonthData.forEach(row => {
+                const customer = row.customer || 'Unknown';
+                if (!byCustomer[customer]) {
+                    byCustomer[customer] = { count: 0, revenue: 0, profit: 0 };
+                }
+                byCustomer[customer].count++;
+                byCustomer[customer].revenue += row.revenue;
+                byCustomer[customer].profit += row.profit;
+            });
+            
+            customerData = Object.entries(byCustomer).map(([name, data]) => ({
+                name,
+                count: data.count,
+                revenue: data.revenue,
+                profit: data.profit,
+                margin: data.revenue > 0 ? (data.profit / data.revenue) * 100 : 0
+            }));
+            
+            customerData.sort((a, b) => b.revenue - a.revenue);
+            
+            // Calculate concentration risk
+            const totalRevenue = customerData.reduce((sum, c) => sum + c.revenue, 0);
+            const top5Revenue = customerData.slice(0, 5).reduce((sum, c) => sum + c.revenue, 0);
+            const concentration = totalRevenue > 0 ? (top5Revenue / totalRevenue) * 100 : 0;
+            document.getElementById('concentrationRisk').textContent = concentration.toFixed(1) + '%';
+            
+            renderCustomerTable();
+        }
+        
+        let customerSortCol = 3;
+        let customerSortDir = -1;
+        
+        function sortCustomerTable(col) {
+            if (customerSortCol === col) {
+                customerSortDir *= -1;
+            } else {
+                customerSortCol = col;
+                customerSortDir = -1;
+            }
+            
+            customerData.sort((a, b) => {
+                let aVal, bVal;
+                switch(col) {
+                    case 0: return 0;
+                    case 1: aVal = a.name; bVal = b.name; break;
+                    case 2: aVal = a.count; bVal = b.count; break;
+                    case 3: aVal = a.revenue; bVal = b.revenue; break;
+                    case 4: aVal = a.profit; bVal = b.profit; break;
+                    case 5: aVal = a.margin; bVal = b.margin; break;
+                }
+                
+                if (typeof aVal === 'string') {
+                    return customerSortDir * aVal.localeCompare(bVal);
+                }
+                return customerSortDir * (aVal - bVal);
+            });
+            
+            renderCustomerTable();
+        }
+        
+        function renderCustomerTable() {
+            const top10 = customerData.slice(0, 10);
+            
+            const html = top10.map((customer, index) => {
+                let marginClass = 'margin-good';
+                if (customer.margin < 30) marginClass = 'margin-warning';
+                if (customer.margin < 20) marginClass = 'margin-poor';
+                
+                return `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${customer.name}</td>
+                        <td>${customer.count}</td>
+                        <td>${formatMoney(customer.revenue)}</td>
+                        <td>${formatMoney(customer.profit)}</td>
+                        <td><span class="${marginClass}">${customer.margin.toFixed(1)}%</span></td>
+                    </tr>
+                `;
+            }).join('');
+            
+            document.getElementById('customerAnalyticsBody').innerHTML = html;
         }
         
         function renderTable(data) {
