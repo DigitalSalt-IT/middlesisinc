@@ -768,22 +768,22 @@
 
         <div class="stats-grid" id="statsGrid" style="display: none;">
             <div class="stat-card revenue">
-                <div class="stat-label">Total Revenue</div>
+                <div class="stat-label">This Month's Revenue</div>
                 <div class="stat-value" id="statRevenue">$0</div>
                 <div class="stat-sub" id="statCount">0 shipments</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Total Cost</div>
+                <div class="stat-label">This Month's Cost</div>
                 <div class="stat-value" id="statCost">$0</div>
                 <div class="stat-sub">Carrier charges</div>
             </div>
             <div class="stat-card profit">
-                <div class="stat-label">Total Profit</div>
+                <div class="stat-label">This Month's Profit</div>
                 <div class="stat-value" id="statProfit">$0</div>
                 <div class="stat-sub" id="statMargin">0% margin</div>
             </div>
             <div class="stat-card commission">
-                <div class="stat-label">Total Commission</div>
+                <div class="stat-label">This Month's Commission</div>
                 <div class="stat-value" id="statCommission">$0</div>
                 <div class="stat-sub" id="statCommissionPercent">0% of profit</div>
             </div>
@@ -887,13 +887,25 @@
     </div>
 
     <footer>
-        Middle Sis Inc. Commission Dashboard v2.4.2 | Working! | Feb 2026
+        Middle Sis Inc. Commission Dashboard v2.5.0 | Working! | Feb 2026
     </footer>
 
     <script>
         let rawData = [];
         let processedData = [];
         let carrierData = [];  // Store for sorting
+
+        // Get current month data
+        function getCurrentMonthData() {
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            return processedData.filter(row => {
+                const rowDate = new Date(row.date);
+                return rowDate.getMonth() === currentMonth && rowDate.getFullYear() === currentYear;
+            });
+        }
         let sortColumn = null;
         let sortAsc = true;
         
@@ -1210,10 +1222,11 @@
         }
         
         function updateStats() {
-            const totalRevenue = processedData.reduce((sum, row) => sum + row.revenue, 0);
-            const totalCost = processedData.reduce((sum, row) => sum + row.cost, 0);
-            const totalProfit = processedData.reduce((sum, row) => sum + row.profit, 0);
-            const totalCommission = processedData.reduce((sum, row) => sum + row.commission, 0);
+            const currentMonthData = getCurrentMonthData();
+            const totalRevenue = currentMonthData.reduce((sum, row) => sum + row.revenue, 0);
+            const totalCost = currentMonthData.reduce((sum, row) => sum + row.cost, 0);
+            const totalProfit = currentMonthData.reduce((sum, row) => sum + row.profit, 0);
+            const totalCommission = currentMonthData.reduce((sum, row) => sum + row.commission, 0);
             const avgMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
             
             // Calculate commission percentage
@@ -1224,7 +1237,7 @@
             document.getElementById('statProfit').textContent = formatMoney(totalProfit);
             document.getElementById('statCommission').textContent = formatMoney(totalCommission);
             document.getElementById('statMargin').textContent = avgMargin.toFixed(1) + '% margin';
-            document.getElementById('statCount').textContent = processedData.length + ' shipments';
+            document.getElementById('statCount').textContent = currentMonthData.length + ' shipments this month';
             document.getElementById('statCommissionPercent').textContent = commissionPercent.toFixed(1) + '% of profit';
         }
         
