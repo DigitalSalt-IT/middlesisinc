@@ -841,7 +841,12 @@
         <!-- Business Analytics Section -->
         <div class="analytics-section" id="analyticsSection" style="display: none;">
             <div class="analytics-header">
-                <h2 class="analytics-title">📊 Carrier Performance - This Month</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 class="analytics-title" style="margin: 0;">📊 Carrier Performance</h2>
+                    <select id="monthSelector" onchange="changeAnalyticsMonth()" style="padding: 8px 16px; border-radius: 6px; border: 2px solid white; background: white; color: #4A7B9D; font-weight: 600; cursor: pointer; font-size: 14px;">
+                        <option value="">Current Month</option>
+                    </select>
+                </div>
             </div>
             <div class="analytics-content">
                 <div class="analytics-table-container">
@@ -915,7 +920,7 @@
     </div>
 
     <footer>
-        Middle Sis Inc. Commission Dashboard v2.7.0 | Working! | Feb 2026
+        Middle Sis Inc. Commission Dashboard v2.8.1 | Working! | Feb 2026
     </footer>
 
     <script>
@@ -923,6 +928,7 @@
         let processedData = [];
         let carrierData = [];  // Store for sorting
         let customerData = [];  // Store customer data for sorting
+        let selectedMonth = null;  // Track selected month for analytics
 
         // Get current month data
         function getCurrentMonthData() {
@@ -1149,7 +1155,8 @@
                         else if (agentName.includes('Austin')) commissionRate = 10.0;
                     }
                     
-                    const commission = profit * (commissionRate / 100); // Calculate commission from profit
+                    // Only calculate commission if profit is positive
+                    const commission = profit > 0 ? profit * (commissionRate / 100) : 0;
                     
                     // Parse date properly
                     let shipDate = row['Shipment Date'] || '';
@@ -1237,6 +1244,7 @@
         }
         
         function displayAll() {
+            populateMonthSelector();
             updateStats();
             updateRepSummary();
             updateCarrierAnalytics();
@@ -1305,7 +1313,7 @@
             // Calculate commission from profit after aggregating
             Object.keys(byRep).forEach(rep => {
                 const data = byRep[rep];
-                data.commission = data.profit * (data.rate / 100);
+                data.commission = data.profit > 0 ? data.profit * (data.rate / 100) : 0;
             });
 
             const html = Object.entries(byRep)
@@ -1550,12 +1558,48 @@
             }
         }
         
-        function updateCarrierAnalytics() {
-            // Group by carrier - use current month data only
-            const byCarrier = {};
-            const currentMonthData = getCurrentMonthData();
+        function populateMonthSelector() {
+            const months = new Set();
+            processedData.forEach(row => {
+                const date = new Date(row.date);
+                const monthKey = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                months.add(monthKey);
+            });
             
-            currentMonthData.forEach(row => {
+            const selector = document.getElementById('monthSelector');
+            const sortedMonths = Array.from(months).sort((a, b) => new Date(b) - new Date(a));
+            
+            selector.innerHTML = '<option value="">Current Month</option>';
+            sortedMonths.forEach(month => {
+                selector.innerHTML += `<option value="${month}">${month}</option>`;
+            });
+        }
+        
+        function changeAnalyticsMonth() {
+            const selector = document.getElementById('monthSelector');
+            selectedMonth = selector.value || null;
+            updateCarrierAnalytics();
+            updateCustomerAnalytics();
+        }
+        
+        function getAnalyticsData() {
+            if (!selectedMonth) {
+                return getCurrentMonthData();
+            }
+            
+            return processedData.filter(row => {
+                const date = new Date(row.date);
+                const monthKey = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                return monthKey === selectedMonth;
+            });
+        }
+        
+        function updateCarrierAnalytics() {
+            // Group by carrier - use selected month or current month
+            const byCarrier = {};
+            const analyticsData = getAnalyticsData();
+            
+            analyticsData.forEach(row => {
                 const carrier = row.carrier || 'Unknown';
                 if (!byCarrier[carrier]) {
                     byCarrier[carrier] = { count: 0, revenue: 0, cost: 0, profit: 0 };
@@ -1642,9 +1686,9 @@
         // Customer Analytics
         function updateCustomerAnalytics() {
             const byCustomer = {};
-            const currentMonthData = getCurrentMonthData();
+            const analyticsData = getAnalyticsData();
             
-            currentMonthData.forEach(row => {
+            analyticsData.forEach(row => {
                 const customer = row.customer || 'Unknown';
                 if (!byCustomer[customer]) {
                     byCustomer[customer] = { count: 0, revenue: 0, profit: 0 };
