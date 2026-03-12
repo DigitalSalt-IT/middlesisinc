@@ -767,22 +767,22 @@
         </div>
 
         <div class="stats-grid" id="statsGrid" style="display: none;">
-            <div class="stat-card revenue">
+            <div class="stat-card revenue" onclick="showBreakdown('revenue')" style="cursor: pointer;">
                 <div class="stat-label">This Month's Revenue</div>
                 <div class="stat-value" id="statRevenue">$0</div>
                 <div class="stat-sub" id="statCount">0 shipments</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" onclick="showBreakdown('cost')" style="cursor: pointer;">
                 <div class="stat-label">This Month's Cost</div>
                 <div class="stat-value" id="statCost">$0</div>
                 <div class="stat-sub">Carrier charges</div>
             </div>
-            <div class="stat-card profit">
+            <div class="stat-card profit" onclick="showBreakdown('profit')" style="cursor: pointer;">
                 <div class="stat-label">This Month's Profit</div>
                 <div class="stat-value" id="statProfit">$0</div>
                 <div class="stat-sub" id="statMargin">0% margin</div>
             </div>
-            <div class="stat-card commission">
+            <div class="stat-card commission" onclick="showBreakdown('commission')" style="cursor: pointer;">
                 <div class="stat-label">This Month's Commission</div>
                 <div class="stat-value" id="statCommission">$0</div>
                 <div class="stat-sub" id="statCommissionPercent">0% of profit</div>
@@ -915,7 +915,7 @@
     </div>
 
     <footer>
-        Middle Sis Inc. Commission Dashboard v2.6.2 | Working! | Feb 2026
+        Middle Sis Inc. Commission Dashboard v2.7.0 | Working! | Feb 2026
     </footer>
 
     <script>
@@ -1863,6 +1863,81 @@
             URL.revokeObjectURL(url);
         }
 
+        function showBreakdown(type) {
+            const modal = document.getElementById('breakdownModal');
+            const title = document.getElementById('modalTitle');
+            const content = document.getElementById('modalContent');
+            
+            // Set title
+            const titles = {
+                revenue: 'Revenue Breakdown',
+                cost: 'Cost Breakdown',
+                profit: 'Profit Breakdown',
+                commission: 'Commission Breakdown'
+            };
+            title.textContent = titles[type] || 'Breakdown';
+            
+            // Group by month
+            const byMonth = {};
+            processedData.forEach(row => {
+                const date = new Date(row.date);
+                const monthKey = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                
+                if (!byMonth[monthKey]) {
+                    byMonth[monthKey] = { revenue: 0, cost: 0, profit: 0, commission: 0, count: 0 };
+                }
+                byMonth[monthKey].revenue += row.revenue;
+                byMonth[monthKey].cost += row.cost;
+                byMonth[monthKey].profit += row.profit;
+                byMonth[monthKey].commission += row.commission;
+                byMonth[monthKey].count++;
+            });
+            
+            // Group current month by week
+            const currentMonthData = getCurrentMonthData();
+            const byWeek = {};
+            currentMonthData.forEach(row => {
+                const date = new Date(row.date);
+                const weekNum = Math.ceil(date.getDate() / 7);
+                const weekKey = `Week ${weekNum}`;
+                
+                if (!byWeek[weekKey]) {
+                    byWeek[weekKey] = { revenue: 0, cost: 0, profit: 0, commission: 0, count: 0 };
+                }
+                byWeek[weekKey].revenue += row.revenue;
+                byWeek[weekKey].cost += row.cost;
+                byWeek[weekKey].profit += row.profit;
+                byWeek[weekKey].commission += row.commission;
+                byWeek[weekKey].count++;
+            });
+            
+            // Build HTML
+            let html = '<h3 style="margin-top: 0;">Month-by-Month</h3>';
+            html += '<table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">';
+            html += '<thead><tr style="background: #f5f6f7;"><th style="padding: 12px; text-align: left; border-bottom: 2px solid #6BA3C8;">Month</th><th style="padding: 12px; text-align: right; border-bottom: 2px solid #6BA3C8;">Amount</th><th style="padding: 12px; text-align: right; border-bottom: 2px solid #6BA3C8;">Shipments</th></tr></thead><tbody>';
+            
+            Object.entries(byMonth).forEach(([month, data]) => {
+                html += `<tr><td style="padding: 12px; border-bottom: 1px solid #e8eaec;">${month}</td><td style="padding: 12px; text-align: right; font-family: 'Fira Code', monospace; border-bottom: 1px solid #e8eaec;">${formatMoney(data[type])}</td><td style="padding: 12px; text-align: right; border-bottom: 1px solid #e8eaec;">${data.count}</td></tr>`;
+            });
+            html += '</tbody></table>';
+            
+            html += '<h3>This Month by Week</h3>';
+            html += '<table style="width: 100%; border-collapse: collapse;">';
+            html += '<thead><tr style="background: #f5f6f7;"><th style="padding: 12px; text-align: left; border-bottom: 2px solid #6BA3C8;">Week</th><th style="padding: 12px; text-align: right; border-bottom: 2px solid #6BA3C8;">Amount</th><th style="padding: 12px; text-align: right; border-bottom: 2px solid #6BA3C8;">Shipments</th></tr></thead><tbody>';
+            
+            Object.entries(byWeek).forEach(([week, data]) => {
+                html += `<tr><td style="padding: 12px; border-bottom: 1px solid #e8eaec;">${week}</td><td style="padding: 12px; text-align: right; font-family: 'Fira Code', monospace; border-bottom: 1px solid #e8eaec;">${formatMoney(data[type])}</td><td style="padding: 12px; text-align: right; border-bottom: 1px solid #e8eaec;">${data.count}</td></tr>`;
+            });
+            html += '</tbody></table>';
+            
+            content.innerHTML = html;
+            modal.style.display = 'block';
+        }
+        
+        function closeBreakdownModal() {
+            document.getElementById('breakdownModal').style.display = 'none';
+        }
+        
         function formatMoney(num) {
             return '$' + Math.abs(num).toLocaleString('en-US', {
                 minimumFractionDigits: 2,
@@ -1870,5 +1945,17 @@
             });
         }
     </script>
+    
+    <!-- Breakdown Modal -->
+    <div id="breakdownModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; overflow: auto;">
+        <div style="background: white; margin: 50px auto; max-width: 1000px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+            <div style="background: linear-gradient(135deg, #6BA3C8 0%, #4A7B9D 100%); padding: 20px 30px; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center;">
+                <h2 id="modalTitle" style="color: white; margin: 0; font-size: 22px;"></h2>
+                <button onclick="closeBreakdownModal()" style="background: none; border: none; color: white; font-size: 36px; cursor: pointer; padding: 0; line-height: 1; width: 40px; height: 40px;">&times;</button>
+            </div>
+            <div style="padding: 30px;" id="modalContent"></div>
+        </div>
+    </div>
+    
 </body>
 </html>
