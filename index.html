@@ -915,7 +915,7 @@
     </div>
 
     <footer>
-        Middle Sis Inc. Commission Dashboard v2.6.1 | Working! | Feb 2026
+        Middle Sis Inc. Commission Dashboard v2.6.2 | Working! | Feb 2026
     </footer>
 
     <script>
@@ -1281,13 +1281,31 @@
             currentMonthData.forEach(row => {
                 const rep = row.salesRep;
                 if (!byRep[rep]) {
-                    byRep[rep] = { count: 0, revenue: 0, cost: 0, profit: 0, commission: 0, rate: row.commissionRate };
+                    byRep[rep] = { count: 0, revenue: 0, cost: 0, profit: 0, commission: 0, rate: 0 };
                 }
                 byRep[rep].count++;
                 byRep[rep].revenue += row.revenue;
                 byRep[rep].cost += row.cost;
                 byRep[rep].profit += row.profit;
-                byRep[rep].commission += row.commission;
+                
+                // Get commission rate for this agent
+                const agentRate = COMMISSION_RATES[rep] || 0;
+                if (agentRate === 0 && rep) {
+                    // Smart lookup for name variations
+                    if (rep.includes('Cheyenne')) byRep[rep].rate = 5.0;
+                    else if (rep.includes('Tom Price')) byRep[rep].rate = 15.0;
+                    else if (rep.includes('Julia')) byRep[rep].rate = 5.0;
+                    else if (rep.includes('Nicole')) byRep[rep].rate = 5.0;
+                    else if (rep.includes('Austin')) byRep[rep].rate = 10.0;
+                } else {
+                    byRep[rep].rate = agentRate;
+                }
+            });
+            
+            // Calculate commission from profit after aggregating
+            Object.keys(byRep).forEach(rep => {
+                const data = byRep[rep];
+                data.commission = data.profit * (data.rate / 100);
             });
 
             const html = Object.entries(byRep)
