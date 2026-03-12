@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     
     <style>
         :root {
@@ -920,7 +922,7 @@
     </div>
 
     <footer>
-        Middle Sis Inc. Commission Dashboard v2.8.1 | Working! | Feb 2026
+        Middle Sis Inc. Commission Dashboard v2.9.0 | Working! | Feb 2026
     </footer>
 
     <script>
@@ -1449,6 +1451,7 @@
                                 <th>Profit</th>
                                 <th>Margin %</th>
                                 <th>Commission</th>
+                                <th>Report</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1466,6 +1469,12 @@
                                                 <strong>${monthMargin.toFixed(1)}%</strong>
                                             </td>
                                             <td><strong>${formatMoney(data.commission)}</strong></td>
+                                            <td>
+                                                <button onclick="generateCommissionPDF('${rep}', '${month}')" 
+                                                        style="padding: 6px 12px; background: var(--color-primary-blue); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;">
+                                                    📄 PDF
+                                                </button>
+                                            </td>
                                         </tr>
                                     `;
                                 }).join('')}
@@ -1980,6 +1989,83 @@
         
         function closeBreakdownModal() {
             document.getElementById('breakdownModal').style.display = 'none';
+        }
+        
+        function generateCommissionPDF(agentName, monthStr) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Filter data for this agent and month
+            const agentData = processedData.filter(row => {
+                const rowDate = new Date(row.date);
+                const rowMonth = rowDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                return row.salesRep === agentName && rowMonth === monthStr;
+            });
+            
+            // Header
+            doc.setFontSize(20);
+            doc.setTextColor(74, 123, 157);
+            doc.text('Middle Sis Inc.', 105, 20, { align: 'center' });
+            
+            doc.setFontSize(16);
+            doc.text('Commission Report', 105, 30, { align: 'center' });
+            
+            // Employee info
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Employee: ${agentName}`, 20, 45);
+            doc.text(`Period: ${monthStr}`, 20, 52);
+            
+            // Calculate totals
+            const totalRevenue = agentData.reduce((sum, row) => sum + row.revenue, 0);
+            const totalCost = agentData.reduce((sum, row) => sum + row.cost, 0);
+            const totalProfit = agentData.reduce((sum, row) => sum + row.profit, 0);
+            const totalCommission = agentData.reduce((sum, row) => sum + row.commission, 0);
+            const avgMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
+            
+            doc.text(`Shipments: ${agentData.length}`, 20, 59);
+            doc.text(`Total Commission: ${formatMoney(totalCommission)}`, 20, 66);
+            
+            // Table
+            const tableData = agentData.map(row => [
+                row.refNumber,
+                row.customer,
+                row.date,
+                formatMoney(row.revenue),
+                formatMoney(row.cost),
+                formatMoney(row.profit),
+                row.margin.toFixed(1) + '%',
+                formatMoney(row.commission)
+            ]);
+            
+            doc.autoTable({
+                startY: 75,
+                head: [['Order #', 'Customer', 'Date', 'Revenue', 'Cost', 'Profit', 'Margin', 'Commission']],
+                body: tableData,
+                theme: 'striped',
+                headStyles: { fillColor: [107, 163, 200], textColor: 255 },
+                styles: { fontSize: 8, cellPadding: 2 },
+                columnStyles: {
+                    0: { cellWidth: 25 },
+                    1: { cellWidth: 35 },
+                    2: { cellWidth: 20 },
+                    3: { cellWidth: 20, halign: 'right' },
+                    4: { cellWidth: 20, halign: 'right' },
+                    5: { cellWidth: 20, halign: 'right' },
+                    6: { cellWidth: 15, halign: 'right' },
+                    7: { cellWidth: 20, halign: 'right', fontStyle: 'bold' }
+                }
+            });
+            
+            // Footer with totals
+            const finalY = doc.lastAutoTable.finalY + 10;
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'bold');
+            doc.text(`Total Commission: ${formatMoney(totalCommission)}`, 150, finalY, { align: 'right' });
+            
+            // Save
+            const filename = `${agentName.replace(/\s+/g, '_')}_Commission_${monthStr.replace(/\s+/g, '_')}.pdf`;
+            doc.save(filename);
         }
         
         function formatMoney(num) {
