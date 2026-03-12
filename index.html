@@ -848,13 +848,13 @@
                     <table class="analytics-table">
                         <thead>
                             <tr>
-                                <th>Rank</th>
-                                <th>Carrier</th>
-                                <th>Shipments</th>
-                                <th>Total Revenue</th>
-                                <th>Total Cost</th>
-                                <th>Total Profit</th>
-                                <th>Avg Margin</th>
+                                <th onclick="sortCarrierTable(0)" style="cursor: pointer;">Rank ⇅</th>
+                                <th onclick="sortCarrierTable(1)" style="cursor: pointer;">Carrier ⇅</th>
+                                <th onclick="sortCarrierTable(2)" style="cursor: pointer;">Shipments ⇅</th>
+                                <th onclick="sortCarrierTable(3)" style="cursor: pointer;">Total Revenue ⇅</th>
+                                <th onclick="sortCarrierTable(4)" style="cursor: pointer;">Total Cost ⇅</th>
+                                <th onclick="sortCarrierTable(5)" style="cursor: pointer;">Total Profit ⇅</th>
+                                <th onclick="sortCarrierTable(6)" style="cursor: pointer;">Avg Margin ⇅</th>
                             </tr>
                         </thead>
                         <tbody id="carrierAnalyticsBody">
@@ -887,12 +887,13 @@
     </div>
 
     <footer>
-        Middle Sis Inc. Commission Dashboard v2.4.0 | Working! | Feb 2026
+        Middle Sis Inc. Commission Dashboard v2.4.2 | Working! | Feb 2026
     </footer>
 
     <script>
         let rawData = [];
         let processedData = [];
+        let carrierData = [];  // Store for sorting
         let sortColumn = null;
         let sortAsc = true;
         
@@ -1093,7 +1094,20 @@
                     const margin = revenue > 0 ? (profit / revenue) * 100 : 0;
                     
                     const agentName = row['Agent Full Name'] || '';
-                    const commissionRate = COMMISSION_RATES[agentName] || 0;
+                    
+                    // Smart commission rate lookup - handles name variations
+                    let commissionRate = COMMISSION_RATES[agentName] || 0;
+                    
+                    // If no exact match, try partial matches
+                    if (commissionRate === 0 && agentName) {
+                        if (agentName.includes('Cheyenne')) commissionRate = 5.0;
+                        else if (agentName.includes('Tom Price')) commissionRate = 15.0;
+                        else if (agentName.includes('Tom') && !agentName.includes('Price')) commissionRate = 15.0;
+                        else if (agentName.includes('Julia')) commissionRate = 5.0;
+                        else if (agentName.includes('Nicole')) commissionRate = 5.0;
+                        else if (agentName.includes('Austin')) commissionRate = 10.0;
+                    }
+                    
                     const commission = profit * (commissionRate / 100); // Calculate commission from profit
                     
                     // Parse date properly
@@ -1366,7 +1380,7 @@
                         </thead>
                         <tbody>
                             ${Object.entries(byMonth)
-                                .sort((a, b) => new Date(b[0]) - new Date(a[0]))
+                                .sort((a, b) => new Date(a[0]) - new Date(b[0]))
                                 .map(([month, data]) => {
                                     const monthMargin = data.revenue > 0 ? (data.profit / data.revenue) * 100 : 0;
                                     return `
@@ -1487,7 +1501,7 @@
             });
             
             // Convert to array and calculate margins
-            const carriers = Object.entries(byCarrier).map(([name, data]) => ({
+            carrierData = Object.entries(byCarrier).map(([name, data]) => ({
                 name,
                 count: data.count,
                 revenue: data.revenue,
@@ -1496,13 +1510,48 @@
                 margin: data.revenue > 0 ? (data.profit / data.revenue) * 100 : 0
             }));
             
-            // Sort by shipment count (top performers)
-            carriers.sort((a, b) => b.count - a.count);
+            // Sort by shipment count initially
+            carrierData.sort((a, b) => b.count - a.count);
             
-            // Take top 10
-            const top10 = carriers.slice(0, 10);
+            // Take top 10 and render
+            renderCarrierTable();
+        }
+        
+        let carrierSortCol = 2;  // Default sort by shipments
+        let carrierSortDir = -1; // Descending
+        
+        function sortCarrierTable(col) {
+            if (carrierSortCol === col) {
+                carrierSortDir *= -1;  // Toggle direction
+            } else {
+                carrierSortCol = col;
+                carrierSortDir = -1;  // Default to descending
+            }
             
-            // Build HTML
+            carrierData.sort((a, b) => {
+                let aVal, bVal;
+                switch(col) {
+                    case 0: return 0;  // Rank - don't sort
+                    case 1: aVal = a.name; bVal = b.name; break;
+                    case 2: aVal = a.count; bVal = b.count; break;
+                    case 3: aVal = a.revenue; bVal = b.revenue; break;
+                    case 4: aVal = a.cost; bVal = b.cost; break;
+                    case 5: aVal = a.profit; bVal = b.profit; break;
+                    case 6: aVal = a.margin; bVal = b.margin; break;
+                }
+                
+                if (typeof aVal === 'string') {
+                    return carrierSortDir * aVal.localeCompare(bVal);
+                }
+                return carrierSortDir * (aVal - bVal);
+            });
+            
+            renderCarrierTable();
+        }
+        
+        function renderCarrierTable() {
+            const top10 = carrierData.slice(0, 10);
+            
             const html = top10.map((carrier, index) => {
                 let marginClass = 'margin-good';
                 if (carrier.margin < 30) marginClass = 'margin-warning';
