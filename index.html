@@ -797,6 +797,21 @@
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;" id="trendsGrid"></div>
         </div>
 
+        <!-- Customer Health Dashboard -->
+        <div id="customerHealthSection" style="display: none; margin: 30px 0; background: white; border-radius: 12px; padding: 20px 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+            <h3 style="color: var(--color-dark-blue); margin-bottom: 20px; font-size: 18px;">💼 Customer Health Dashboard</h3>
+            
+            <div style="margin-bottom: 30px;">
+                <h4 style="color: var(--color-grey); font-size: 14px; margin-bottom: 15px; text-transform: uppercase; font-weight: 600;">Top 5 Customers</h4>
+                <div id="topCustomersGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;"></div>
+            </div>
+            
+            <div id="atRiskSection" style="display: none;">
+                <h4 style="color: var(--color-red); font-size: 14px; margin-bottom: 15px; text-transform: uppercase; font-weight: 600;">⚠️ At-Risk Customers</h4>
+                <div id="atRiskGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;"></div>
+            </div>
+        </div>
+
         <div class="controls" id="controls" style="display: none;">
             <div class="control-group">
                 <label class="control-label">Filter by Agent</label>
@@ -928,7 +943,7 @@
     </div>
 
     <footer>
-        Middle Sis Inc. Commission Dashboard v2.10.0 | Working! | Feb 2026
+        Middle Sis Inc. Commission Dashboard v2.11.0 | Working! | Feb 2026
     </footer>
 
     <script>
@@ -1257,6 +1272,7 @@
             updateRepSummary();
             updateCarrierAnalytics();
             updateCustomerAnalytics();
+            updateCustomerHealth();
             renderTable(processedData);
             populateFilters();
             
@@ -1367,6 +1383,136 @@
             
             document.getElementById('trendsGrid').innerHTML = html;
             document.getElementById('trendsSection').style.display = 'block';
+        }
+        
+        function updateCustomerHealth() {
+            // Get current and previous month
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+            const prevYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+            
+            // Group by customer for current month
+            const currentMonthByCustomer = {};
+            processedData.forEach(row => {
+                const date = new Date(row.date);
+                if (date.getMonth() === currentMonth && date.getFullYear() === currentYear) {
+                    const customer = row.customer;
+                    if (!currentMonthByCustomer[customer]) {
+                        currentMonthByCustomer[customer] = { count: 0, revenue: 0, profit: 0 };
+                    }
+                    currentMonthByCustomer[customer].count++;
+                    currentMonthByCustomer[customer].revenue += row.revenue;
+                    currentMonthByCustomer[customer].profit += row.profit;
+                }
+            });
+            
+            // Group by customer for previous month
+            const prevMonthByCustomer = {};
+            processedData.forEach(row => {
+                const date = new Date(row.date);
+                if (date.getMonth() === prevMonth && date.getFullYear() === prevYear) {
+                    const customer = row.customer;
+                    if (!prevMonthByCustomer[customer]) {
+                        prevMonthByCustomer[customer] = { count: 0, revenue: 0, profit: 0 };
+                    }
+                    prevMonthByCustomer[customer].count++;
+                    prevMonthByCustomer[customer].revenue += row.revenue;
+                    prevMonthByCustomer[customer].profit += row.profit;
+                }
+            });
+            
+            // Calculate health for each customer
+            const customerHealth = [];
+            Object.entries(currentMonthByCustomer).forEach(([customer, current]) => {
+                const prev = prevMonthByCustomer[customer] || { count: 0, revenue: 0, profit: 0 };
+                
+                const revenueChange = prev.revenue > 0 ? ((current.revenue - prev.revenue) / prev.revenue) * 100 : 0;
+                const volumeChange = prev.count > 0 ? ((current.count - prev.count) / prev.count) * 100 : 0;
+                
+                const currentMargin = current.revenue > 0 ? (current.profit / current.revenue) * 100 : 0;
+                const prevMargin = prev.revenue > 0 ? (prev.profit / prev.revenue) * 100 : 0;
+                const marginChange = prevMargin > 0 ? currentMargin - prevMargin : 0;
+                
+                // Determine health status
+                let status = 'healthy';
+                if (revenueChange < -20 || marginChange < -5) {
+                    status = 'at-risk';
+                } else if (revenueChange < -10 || marginChange < -3) {
+                    status = 'watch';
+                }
+                
+                customerHealth.push({
+                    customer,
+                    revenue: current.revenue,
+                    count: current.count,
+                    margin: currentMargin,
+                    revenueChange,
+                    volumeChange,
+                    marginChange,
+                    status
+                });
+            });
+            
+            // Sort by revenue
+            customerHealth.sort((a, b) => b.revenue - a.revenue);
+            
+            // Top 5
+            const top5 = customerHealth.slice(0, 5);
+            
+            // At-risk
+            const atRisk = customerHealth.filter(c => c.status === 'at-risk');
+            
+            // Render top 5
+            const top5HTML = top5.map(c => {
+                const statusIcon = c.status === 'healthy' ? '🟢' : c.status === 'watch' ? '🟡' : '🔴';
+                const revIcon = c.revenueChange > 0 ? '📈' : c.revenueChange < 0 ? '📉' : '➡️';
+                const revColor = c.revenueChange > 0 ? 'var(--color-green)' : c.revenueChange < 0 ? 'var(--color-red)' : 'var(--color-grey)';
+                
+                return `
+                    <div style="padding: 15px; background: var(--color-cream); border-radius: 8px; border-left: 4px solid ${c.status === 'healthy' ? 'var(--color-green)' : c.status === 'watch' ? 'var(--color-orange)' : 'var(--color-red)'};">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                            <div style="font-weight: 700; color: var(--color-dark-blue); font-size: 14px;">${c.customer}</div>
+                            <div style="font-size: 18px;">${statusIcon}</div>
+                        </div>
+                        <div style="font-size: 20px; font-weight: 700; color: var(--color-dark-blue); margin-bottom: 8px;">${formatMoney(c.revenue)}</div>
+                        <div style="font-size: 12px; color: ${revColor}; font-weight: 600; margin-bottom: 4px;">
+                            ${revIcon} Revenue ${Math.abs(c.revenueChange).toFixed(1)}% ${c.revenueChange >= 0 ? 'up' : 'down'}
+                        </div>
+                        <div style="font-size: 11px; color: var(--color-grey);">
+                            ${c.count} shipments • ${c.margin.toFixed(1)}% margin
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('topCustomersGrid').innerHTML = top5HTML;
+            
+            // Render at-risk if any
+            if (atRisk.length > 0) {
+                const atRiskHTML = atRisk.map(c => {
+                    return `
+                        <div style="padding: 15px; background: #fff5f5; border-radius: 8px; border-left: 4px solid var(--color-red);">
+                            <div style="font-weight: 700; color: var(--color-dark-blue); font-size: 14px; margin-bottom: 8px;">${c.customer}</div>
+                            <div style="font-size: 11px; color: var(--color-grey); margin-bottom: 4px;">
+                                Revenue: ${formatMoney(c.revenue)} (${c.revenueChange >= 0 ? '+' : ''}${c.revenueChange.toFixed(1)}%)
+                            </div>
+                            <div style="font-size: 11px; color: var(--color-grey);">
+                                Margin: ${c.margin.toFixed(1)}% (${c.marginChange >= 0 ? '+' : ''}${c.marginChange.toFixed(1)}%)
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                document.getElementById('atRiskGrid').innerHTML = atRiskHTML;
+                document.getElementById('atRiskSection').style.display = 'block';
+            } else {
+                document.getElementById('atRiskSection').style.display = 'none';
+            }
+            
+            document.getElementById('customerHealthSection').style.display = 'block';
         }
         
         function updateRepSummary() {
