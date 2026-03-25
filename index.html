@@ -943,7 +943,7 @@
     </div>
 
     <footer>
-        Middle Sis Inc. Commission Dashboard v2.12.1 | Working! | Feb 2026
+        Middle Sis Inc. Commission Dashboard v2.13.0 | Working! | Feb 2026
     </footer>
 
     <script>
@@ -1386,7 +1386,7 @@
             const commIndicator = getIndicator(commissionChange);
             
             const html = `
-                <div style="padding: 15px; background: var(--color-cream); border-radius: 8px;">
+                <div onclick="showWeekTrendsModal('revenue')" style="padding: 15px; background: var(--color-cream); border-radius: 8px; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                     <div style="font-size: 12px; color: var(--color-grey); margin-bottom: 8px;">Revenue</div>
                     <div style="font-size: 24px; font-weight: 700; color: var(--color-dark-blue); margin-bottom: 8px;">${formatMoney(thisWeekRevenue)}</div>
                     <div style="font-size: 14px; color: ${revIndicator.color}; font-weight: 600;">
@@ -1394,7 +1394,7 @@
                     </div>
                     <div style="font-size: 11px; color: var(--color-grey); margin-top: 4px;">vs last week: ${formatMoney(lastWeekRevenue)}</div>
                 </div>
-                <div style="padding: 15px; background: var(--color-cream); border-radius: 8px;">
+                <div onclick="showWeekTrendsModal('profit')" style="padding: 15px; background: var(--color-cream); border-radius: 8px; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                     <div style="font-size: 12px; color: var(--color-grey); margin-bottom: 8px;">Profit</div>
                     <div style="font-size: 24px; font-weight: 700; color: var(--color-dark-blue); margin-bottom: 8px;">${formatMoney(thisWeekProfit)}</div>
                     <div style="font-size: 14px; color: ${profitIndicator.color}; font-weight: 600;">
@@ -1402,7 +1402,7 @@
                     </div>
                     <div style="font-size: 11px; color: var(--color-grey); margin-top: 4px;">vs last week: ${formatMoney(lastWeekProfit)}</div>
                 </div>
-                <div style="padding: 15px; background: var(--color-cream); border-radius: 8px;">
+                <div onclick="showWeekTrendsModal('commission')" style="padding: 15px; background: var(--color-cream); border-radius: 8px; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                     <div style="font-size: 12px; color: var(--color-grey); margin-bottom: 8px;">Commission</div>
                     <div style="font-size: 24px; font-weight: 700; color: var(--color-dark-blue); margin-bottom: 8px;">${formatMoney(thisWeekCommission)}</div>
                     <div style="font-size: 14px; color: ${commIndicator.color}; font-weight: 600;">
@@ -2255,6 +2255,114 @@
             document.getElementById('breakdownModal').style.display = 'none';
         }
         
+        function showWeekTrendsModal(type) {
+            const modal = document.getElementById('weekTrendsModal');
+            const title = document.getElementById('weekModalTitle');
+            const content = document.getElementById('weekModalContent');
+            
+            const titles = {
+                revenue: 'Weekly Revenue Trends',
+                profit: 'Weekly Profit Trends',
+                commission: 'Weekly Commission Trends'
+            };
+            title.textContent = titles[type] || 'Weekly Trends';
+            
+            // Get last 4 weeks data (this year)
+            const now = new Date();
+            const weeks2026 = [];
+            
+            for (let i = 0; i < 4; i++) {
+                const weekStart = new Date(now);
+                weekStart.setDate(now.getDate() - now.getDay() - (i * 7));
+                weekStart.setHours(0, 0, 0, 0);
+                
+                const weekEnd = new Date(weekStart);
+                weekEnd.setDate(weekStart.getDate() + 6);
+                weekEnd.setHours(23, 59, 59, 999);
+                
+                const weekData = processedData.filter(row => {
+                    const date = new Date(row.date);
+                    return date >= weekStart && date <= weekEnd;
+                });
+                
+                const revenue = weekData.reduce((sum, r) => sum + r.revenue, 0);
+                const profit = weekData.reduce((sum, r) => sum + r.profit, 0);
+                const commission = weekData.reduce((sum, r) => sum + r.commission, 0);
+                
+                weeks2026.push({
+                    label: `${weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`,
+                    revenue,
+                    profit,
+                    commission,
+                    count: weekData.length
+                });
+            }
+            
+            // Get same weeks last year (2025)
+            const weeks2025 = [];
+            
+            for (let i = 0; i < 4; i++) {
+                const weekStart = new Date(now);
+                weekStart.setFullYear(now.getFullYear() - 1);
+                weekStart.setDate(now.getDate() - now.getDay() - (i * 7));
+                weekStart.setHours(0, 0, 0, 0);
+                
+                const weekEnd = new Date(weekStart);
+                weekEnd.setDate(weekStart.getDate() + 6);
+                weekEnd.setHours(23, 59, 59, 999);
+                
+                const weekData = processedData.filter(row => {
+                    const date = new Date(row.date);
+                    return date >= weekStart && date <= weekEnd;
+                });
+                
+                const revenue = weekData.reduce((sum, r) => sum + r.revenue, 0);
+                const profit = weekData.reduce((sum, r) => sum + r.profit, 0);
+                const commission = weekData.reduce((sum, r) => sum + r.commission, 0);
+                
+                weeks2025.push({
+                    label: `${weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} 2025`,
+                    revenue,
+                    profit,
+                    commission,
+                    count: weekData.length
+                });
+            }
+            
+            // Build HTML
+            let html = '<h3 style="margin-top: 0;">Last 4 Weeks (2026)</h3>';
+            html += '<table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">';
+            html += '<thead><tr style="background: #f5f6f7;"><th style="padding: 12px; text-align: left; border-bottom: 2px solid #6BA3C8;">Week</th><th style="padding: 12px; text-align: right; border-bottom: 2px solid #6BA3C8;">Amount</th><th style="padding: 12px; text-align: right; border-bottom: 2px solid #6BA3C8;">Shipments</th></tr></thead><tbody>';
+            
+            weeks2026.forEach(week => {
+                html += `<tr><td style="padding: 12px; border-bottom: 1px solid #e8eaec;">${week.label}</td><td style="padding: 12px; text-align: right; font-family: 'Fira Code', monospace; border-bottom: 1px solid #e8eaec;">${formatMoney(week[type])}</td><td style="padding: 12px; text-align: right; border-bottom: 1px solid #e8eaec;">${week.count}</td></tr>`;
+            });
+            html += '</tbody></table>';
+            
+            // Check if we have any 2025 data
+            const has2025Data = weeks2025.some(w => w.count > 0);
+            
+            html += '<h3>Same Weeks Last Year (2025)</h3>';
+            if (has2025Data) {
+                html += '<table style="width: 100%; border-collapse: collapse;">';
+                html += '<thead><tr style="background: #f5f6f7;"><th style="padding: 12px; text-align: left; border-bottom: 2px solid #6BA3C8;">Week</th><th style="padding: 12px; text-align: right; border-bottom: 2px solid #6BA3C8;">Amount</th><th style="padding: 12px; text-align: right; border-bottom: 2px solid #6BA3C8;">Shipments</th></tr></thead><tbody>';
+                
+                weeks2025.forEach(week => {
+                    html += `<tr><td style="padding: 12px; border-bottom: 1px solid #e8eaec;">${week.label}</td><td style="padding: 12px; text-align: right; font-family: 'Fira Code', monospace; border-bottom: 1px solid #e8eaec;">${formatMoney(week[type])}</td><td style="padding: 12px; text-align: right; border-bottom: 1px solid #e8eaec;">${week.count}</td></tr>`;
+                });
+                html += '</tbody></table>';
+            } else {
+                html += '<div style="padding: 20px; background: #f5f6f7; border-radius: 8px; text-align: center; color: var(--color-grey); font-style: italic;">No data available for 2025 yet</div>';
+            }
+            
+            content.innerHTML = html;
+            modal.style.display = 'block';
+        }
+        
+        function closeWeekTrendsModal() {
+            document.getElementById('weekTrendsModal').style.display = 'none';
+        }
+        
         function generateCommissionPDF(agentName, monthStr) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
@@ -2348,6 +2456,17 @@
                 <button onclick="closeBreakdownModal()" style="background: none; border: none; color: white; font-size: 36px; cursor: pointer; padding: 0; line-height: 1; width: 40px; height: 40px;">&times;</button>
             </div>
             <div style="padding: 30px;" id="modalContent"></div>
+        </div>
+    </div>
+    
+    <!-- Week Trends Modal -->
+    <div id="weekTrendsModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; overflow: auto;">
+        <div style="background: white; margin: 50px auto; max-width: 900px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+            <div style="background: linear-gradient(135deg, #6BA3C8 0%, #4A7B9D 100%); padding: 20px 30px; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center;">
+                <h2 id="weekModalTitle" style="color: white; margin: 0; font-size: 22px;"></h2>
+                <button onclick="closeWeekTrendsModal()" style="background: none; border: none; color: white; font-size: 36px; cursor: pointer; padding: 0; line-height: 1; width: 40px; height: 40px;">&times;</button>
+            </div>
+            <div style="padding: 30px;" id="weekModalContent"></div>
         </div>
     </div>
     
